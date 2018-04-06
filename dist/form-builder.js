@@ -1336,7 +1336,7 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', ["$rootScope", functi
             ctrl.possiblePageFlow = [];
             var defaultPageFlow = {
                 nextPage: true,
-                label: 'mwForm.pageFlow.goToNextPage'
+                label: 'target.mwForm.pageFlow.goToNextPage'
             };
             ctrl.possiblePageFlow.push(defaultPageFlow);
             ctrl.isSamePageFlow = function (p1, p2){
@@ -1353,13 +1353,13 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', ["$rootScope", functi
                             id: page.id,
                             number: page.number
                         },
-                        label: 'mwForm.pageFlow.goToPage'
+                        label: 'target.mwForm.pageFlow.goToPage'
                     });
                 });
 
                 ctrl.possiblePageFlow.push({
                     formSubmit:true,
-                    label: 'mwForm.pageFlow.submitForm'
+                    label: 'target.mwForm.pageFlow.submitForm'
                 });
                 ctrl.formData.pages.forEach(function(page){
                     ctrl.possiblePageFlow.forEach(function(pageFlow){
@@ -1414,7 +1414,7 @@ angular.module('mwFormBuilder').filter('mwStartFrom', function() {
     };
 });
 angular.module('mwFormBuilder')
-    .constant('MW_QUESTION_TYPES', ['text', 'textarea', 'radio', 'checkbox', 'select', 'grid', 'priority', 'division', 'number', 'date', 'time', 'email', 'range', 'url'])
+    .constant('MW_QUESTION_TYPES', ['text', 'textarea', 'radio', 'checkbox', 'select'])
     .constant('MW_ELEMENT_TYPES', ['question', 'image', 'paragraph'])
     .constant('MW_GRID_CELL_INPUT_TYPES', ['radio', 'checkbox', 'text', 'number', 'date', 'time'])
     .factory('mwFormBuilderOptions', ["MW_ELEMENT_TYPES", "MW_QUESTION_TYPES", function mwFormBuilderOptionsFactory(MW_ELEMENT_TYPES, MW_QUESTION_TYPES){
