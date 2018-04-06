@@ -152,7 +152,7 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', function ($rootScope)
             ctrl.possiblePageFlow = [];
             var defaultPageFlow = {
                 nextPage: true,
-                label: 'mwForm.pageFlow.goToNextPage'
+                label: 'target.mwForm.pageFlow.goToNextPage'
             };
             ctrl.possiblePageFlow.push(defaultPageFlow);
             ctrl.isSamePageFlow = function (p1, p2){
@@ -169,13 +169,13 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', function ($rootScope)
                             id: page.id,
                             number: page.number
                         },
-                        label: 'mwForm.pageFlow.goToPage'
+                        label: 'target.mwForm.pageFlow.goToPage'
                     });
                 });
 
                 ctrl.possiblePageFlow.push({
                     formSubmit:true,
-                    label: 'mwForm.pageFlow.submitForm'
+                    label: 'target.mwForm.pageFlow.submitForm'
                 });
                 ctrl.formData.pages.forEach(function(page){
                     ctrl.possiblePageFlow.forEach(function(pageFlow){
