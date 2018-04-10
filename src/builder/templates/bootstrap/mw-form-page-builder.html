@@ -11,7 +11,7 @@
       <div class="page-element-list" ng-sortable="ctrl.sortableConfig" ng-model="ctrl.formPage.elements">
         <div class="empty-page-element-list-label form-group"
              ng-if="!ctrl.formPage.elements || (ctrl.formPage.elements && ctrl.formPage.elements.length === 0)">
-          <span>No Questions</span>
+          <span>{{'target.mwForm.questions.no-questions' | translate}}</span>
         </div>
         <mw-form-page-element-builder ng-repeat="element in ctrl.formPage.elements" page-element="element"
                                       form-object="ctrl.formObject" is-active="ctrl.isElementActive(element)"
@@ -23,7 +23,7 @@
 
       <div uib-dropdown class="add-element btn-group" ng-if="!ctrl.readOnly">
         <button type="button" class="btn btn-default" ng-click="ctrl.addElement()">
-          <span>Add question</span>
+          <span>{{'target.mwForm.questions.add-question' | translate}}</span>
         </button>
       </div>
 
