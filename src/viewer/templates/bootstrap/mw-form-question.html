@@ -6,10 +6,10 @@
 
     <div class="mw-question-answers" ng-switch="ctrl.question.type">
         <div ng-switch-when="text">
-            <input class="form-control" type="text" ng-model="ctrl.questionResponse.answer"  placeholder="{{'mwForm.question.preview.text'|translate}}" ng-required="ctrl.question.required" ng-readonly="ctrl.readOnly">
+            <input class="form-control" type="text" ng-model="ctrl.questionResponse.answer"  placeholder="{{'target.mwForm.question.preview.text'|translate}}" ng-required="ctrl.question.required" ng-readonly="ctrl.readOnly">
         </div>
         <div ng-switch-when="textarea">
-            <textarea msd-elastic class="form-control" ng-model="ctrl.questionResponse.answer"  placeholder="{{'mwForm.question.preview.textarea'|translate}}" ng-required="ctrl.question.required" ng-readonly="ctrl.readOnly"></textarea>
+            <textarea msd-elastic class="form-control" ng-model="ctrl.questionResponse.answer"  placeholder="{{'target.mwForm.question.preview.textarea'|translate}}" ng-required="ctrl.question.required" ng-readonly="ctrl.readOnly"></textarea>
         </div>
         <div ng-switch-when="radio">
             <div class="radio" ng-repeat="answer in ctrl.question.offeredAnswers">
@@ -38,7 +38,7 @@
             </div>
             <div class="checkbox"  ng-if="ctrl.question.otherAnswer">
                 <label>
-                    <input type="checkbox" name="answer-for-question-{{ctrl.question.id}}" ng-model="ctrl.isOtherAnswer" ng-change="ctrl.otherAnswerCheckboxChanged()" ng-disabled="ctrl.readOnly"><span translate="mwForm.question.preview.otherAnswer">Inna</span>:
+                    <input type="checkbox" name="answer-for-question-{{ctrl.question.id}}" ng-model="ctrl.isOtherAnswer" ng-change="ctrl.otherAnswerCheckboxChanged()" ng-disabled="ctrl.readOnly"><span translate="target.mwForm.question.preview.otherAnswer">Inna</span>:
                 </label>
                 <span class="form-inline">
                     <input type="text" ng-model="ctrl.questionResponse.other" name="other-answer-for-question-{{ctrl.question.id}}" class="form-control" ng-disabled="!ctrl.isOtherAnswer || ctrl.readOnly" ng-required="ctrl.isOtherAnswer">

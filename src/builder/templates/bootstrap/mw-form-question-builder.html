@@ -5,7 +5,7 @@
         <div class="form-group">
 
           <mw-label label-for="question-text-{{ctrl.id}}" label-class="col-sm-2 control-label"
-                    label-key="Question text"></mw-label>
+                    label-key="target.mwForm.questions.question-text"></mw-label>
           <div class="col-sm-10 col-md-8">
             <input type="text" class="form-control" name="text" ng-attr-id="question-text-{{ctrl.id}}"
                    ng-model="ctrl.question.text" ng-readonly="ctrl.readOnly" required>
@@ -13,10 +13,10 @@
         </div>
         <div class="form-group mw-question-type">
           <mw-label label-for="question-type-{{ctrl.id}}" label-class="col-sm-2 control-label"
-                    label-key="Question type"></mw-label>
+                    label-key="target.mwForm.questions.question-type"></mw-label>
           <div class="col-sm-10 form-inline">
             <select ng-attr-id="question-type-{{ctrl.id}}"
-                    ng-options="'target.mwForm.question.types.'+type+''|translate for type in ctrl.questionTypes"
+                    ng-options="'target.mwForm.question.types.'+type+''| translate for type in ctrl.questionTypes"
                     ng-model="ctrl.question.type" ng-change="ctrl.questionTypeChanged()" class="form-control"
                     ng-disabled="ctrl.readOnly" required></select>
           </div>
@@ -70,12 +70,12 @@
       <br/> <br/>
       <div class="row">
         <div class="col-xs-2">
-          <button type="button" class="btn btn-primary" ng-click="ctrl.save()">Save question</button>
+          <button type="button" class="btn btn-primary" ng-click="ctrl.save()">{{'target.mwForm.questions.save-question' | translate}}</button>
         </div>
         <div class="col-xs-10">
           <div class="checkbox">
             <label>
-              <input type="checkbox" ng-model="ctrl.question.required" ng-disabled="ctrl.readOnly"><span>Required</span>
+              <input type="checkbox" ng-model="ctrl.question.required" ng-disabled="ctrl.readOnly"><span>{{'target.mwForm.questions.required' | translate}}</span>
             </label>
           </div>
         </div>
@@ -89,7 +89,7 @@
       </div>
       <div class="question-answers" ng-switch="ctrl.question.type">
         <div ng-switch-when="text">
-          <input class="form-control" type="text" disabled value="{{'mwForm.question.preview.text'|translate}}">
+          <input class="form-control" type="text" disabled value="{{'target.mwForm.question.preview.text'|translate}}">
         </div>
         <div ng-switch-when="number" class="form-inline">
           <input class="form-control" type="number" disabled>
@@ -116,7 +116,7 @@
 
         <div ng-switch-when="textarea">
           <textarea class="form-control" type="text"
-                    disabled>{{'mwForm.question.preview.textarea'|translate}}</textarea>
+                    disabled>{{'target.mwForm.question.preview.textarea'|translate}}</textarea>
         </div>
         <div ng-switch-when="radio">
           <div class="radio" ng-repeat="answer in ctrl.question.offeredAnswers">
@@ -126,7 +126,7 @@
             </label>
           </div>
           <div class="radio" ng-if="ctrl.question.otherAnswer">
-            <label><input type="radio"><span translate="mwForm.question.preview.otherAnswer">Inna</span>:</label>
+            <label><input type="radio"><span translate="target.mwForm.question.preview.otherAnswer">Inna</span>:</label>
             <span class="form-inline">
                             <input type="text" class="form-control" disabled>
                         </span>
