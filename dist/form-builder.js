@@ -767,122 +767,122 @@ angular.module('mwFormBuilder').factory("FormParagraphBuilderId", function(){
     };
 });
 
-
 angular.module('mwFormBuilder').directive('mwFormPageElementBuilder', function () {
 
-    return {
-        replace: true,
-        restrict: 'AE',
-        require: '^mwFormPageBuilder',
-        scope: {
-            pageElement: '=',
-            formObject: '=',
-            isActive: '=',
-            isFirst: '=',
-            isLast: '=',
-            onReady: '&',
-            readOnly: '=?'
-        },
-        templateUrl: 'mw-form-page-element-builder.html',
-        controllerAs: 'ctrl',
-        bindToController: true,
-        controller: ["mwFormUuid", function(mwFormUuid){
-            var ctrl = this;
+  return {
+    replace: true,
+    restrict: 'AE',
+    require: '^mwFormPageBuilder',
+    scope: {
+      pageElement: '=',
+      formObject: '=',
+      isActive: '=',
+      isFirst: '=',
+      isLast: '=',
+      onReady: '&',
+      readOnly: '=?',
+      uploadUrl: '=',
+    },
+    templateUrl: 'mw-form-page-element-builder.html',
+    controllerAs: 'ctrl',
+    bindToController: true,
+    controller: ["mwFormUuid", function (mwFormUuid) {
+      var ctrl = this;
 
-            // Put initialization logic inside `$onInit()`
-            // to make sure bindings have been initialized.
-            ctrl.$onInit = function() {
-                if(ctrl.pageElement.type=='question'){
-                    if(!ctrl.pageElement.question){
-                        ctrl.pageElement.question={
-                            id: mwFormUuid.get(),
-                            text: null,
-                            type:null,
-                            required:true
-                        };
-                    }
-                }else if(ctrl.pageElement.type=='image'){
-                    if(!ctrl.pageElement.image){
-                        ctrl.pageElement.image={
-                            id: mwFormUuid.get(),
-                            align: 'left'
-                        };
-                    }
-
-                }else if(ctrl.pageElement.type=='paragraph'){
-                    if(!ctrl.pageElement.paragraph){
-                        ctrl.pageElement.paragraph={
-                            id: mwFormUuid.get(),
-                            html: ''
-                        };
-                    }
-                }
+      // Put initialization logic inside `$onInit()`
+      // to make sure bindings have been initialized.
+      ctrl.$onInit = function () {
+        if (ctrl.pageElement.type == 'question') {
+          if (!ctrl.pageElement.question) {
+            ctrl.pageElement.question = {
+              id: mwFormUuid.get(),
+              text: null,
+              type: null,
+              required: true
             };
-
-            ctrl.callback = function($event,element){
-                $event.preventDefault();
-                $event.stopPropagation();
-                if (element.callback && typeof element.callback === "function") {
-                    element.callback(ctrl.pageElement);
-                }
+          }
+        } else if (ctrl.pageElement.type == 'image') {
+          if (!ctrl.pageElement.image) {
+            ctrl.pageElement.image = {
+              id: mwFormUuid.get(),
+              align: 'left'
             };
-            ctrl.filter = function(button){
-                if(!button.showInOpen && ctrl.isActive){
-                    return false;
-                }
-                if(!button.showInPreview && !ctrl.isActive){
-                    return false;
-                }
+          }
 
-                if (button.filter && typeof button.filter === "function") {
-                    return button.filter(ctrl.pageElement);
-                }
-                return true;
+        } else if (ctrl.pageElement.type == 'paragraph') {
+          if (!ctrl.pageElement.paragraph) {
+            ctrl.pageElement.paragraph = {
+              id: mwFormUuid.get(),
+              html: ''
             };
-
-            // Prior to v1.5, we need to call `$onInit()` manually.
-            // (Bindings will always be pre-assigned in these versions.)
-            if (angular.version.major === 1 && angular.version.minor < 5) {
-                ctrl.$onInit();
-            }
-        }],
-        link: function (scope, ele, attrs, pageBuilderCtrl){
-            var ctrl = scope.ctrl;
-            ctrl.possiblePageFlow = pageBuilderCtrl.possiblePageFlow;
-
-            ctrl.hoverIn = function(){
-                ctrl.isHovered = true;
-            };
-
-            ctrl.hoverOut = function(){
-                ctrl.isHovered = false;
-            };
-
-            ctrl.editElement=function(){
-                pageBuilderCtrl.selectElement(ctrl.pageElement);
-            };
-
-            ctrl.cloneElement=function($event){
-                $event.preventDefault();
-                $event.stopPropagation();
-                pageBuilderCtrl.cloneElement(ctrl.pageElement);
-            };
-
-            ctrl.removeElement=function(){
-                pageBuilderCtrl.removeElement(ctrl.pageElement);
-            };
-
-            ctrl.moveDown= function(){
-                pageBuilderCtrl.moveDownElement(ctrl.pageElement);
-            };
-            ctrl.moveUp= function(){
-                pageBuilderCtrl.moveUpElement(ctrl.pageElement);
-            };
-
-            ctrl.options = pageBuilderCtrl.options;
-            ctrl.onImageSelection = pageBuilderCtrl.onImageSelection;
+          }
         }
-    };
+      };
+
+      ctrl.callback = function ($event, element) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        if (element.callback && typeof element.callback === "function") {
+          element.callback(ctrl.pageElement);
+        }
+      };
+      ctrl.filter = function (button) {
+        if (!button.showInOpen && ctrl.isActive) {
+          return false;
+        }
+        if (!button.showInPreview && !ctrl.isActive) {
+          return false;
+        }
+
+        if (button.filter && typeof button.filter === "function") {
+          return button.filter(ctrl.pageElement);
+        }
+        return true;
+      };
+
+      // Prior to v1.5, we need to call `$onInit()` manually.
+      // (Bindings will always be pre-assigned in these versions.)
+      if (angular.version.major === 1 && angular.version.minor < 5) {
+        ctrl.$onInit();
+      }
+    }],
+    link: function (scope, ele, attrs, pageBuilderCtrl) {
+      var ctrl = scope.ctrl;
+      ctrl.possiblePageFlow = pageBuilderCtrl.possiblePageFlow;
+
+      ctrl.hoverIn = function () {
+        ctrl.isHovered = true;
+      };
+
+      ctrl.hoverOut = function () {
+        ctrl.isHovered = false;
+      };
+
+      ctrl.editElement = function () {
+        pageBuilderCtrl.selectElement(ctrl.pageElement);
+      };
+
+      ctrl.cloneElement = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        pageBuilderCtrl.cloneElement(ctrl.pageElement);
+      };
+
+      ctrl.removeElement = function () {
+        pageBuilderCtrl.removeElement(ctrl.pageElement);
+      };
+
+      ctrl.moveDown = function () {
+        pageBuilderCtrl.moveDownElement(ctrl.pageElement);
+      };
+      ctrl.moveUp = function () {
+        pageBuilderCtrl.moveUpElement(ctrl.pageElement);
+      };
+
+      ctrl.options = pageBuilderCtrl.options;
+      ctrl.onImageSelection = pageBuilderCtrl.onImageSelection;
+    }
+  };
 });
 
 
@@ -897,7 +897,8 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
             formObject: '=',
             isFirst: '=',
             isLast: '=',
-            readOnly: '=?'
+            readOnly: '=?',
+            uploadUrl: '=',
         },
         templateUrl: 'mw-form-page-builder.html',
         controllerAs: 'ctrl',
@@ -1089,66 +1090,81 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
     };
 }]);
 
+angular.module('mwFormBuilder').factory("FormImageBuilderId", function () {
+  var id = 0;
+  return {
+    next: function () {
+      return ++id;
+    }
+  }
+})
 
-angular.module('mwFormBuilder').factory("FormImageBuilderId", function(){
-    var id = 0;
-        return {
-            next: function(){
-                return ++id;
-            }
-        }
-    })
-
-    .directive('mwFormImageBuilder', function () {
+  .directive('mwFormImageBuilder', function () {
 
     return {
-        replace: true,
-        restrict: 'AE',
-        require: '^mwFormPageElementBuilder',
-        scope: {
-            image: '=',
-            formObject: '=',
-            onReady: '&',
-            isPreview: '=?',
-            readOnly: '=?',
-            onImageSelection: '&'
-        },
-        templateUrl: 'mw-form-image-builder.html',
-        controllerAs: 'ctrl',
-        bindToController: true,
-        controller: ["$timeout", "FormImageBuilderId", "mwFormUuid", function($timeout,FormImageBuilderId, mwFormUuid){
-            var ctrl = this;
-            ctrl.id = FormImageBuilderId.next();
-            ctrl.formSubmitted=false;
+      replace: true,
+      restrict: 'AE',
+      require: '^mwFormPageElementBuilder',
+      scope: {
+        image: '=',
+        formObject: '=',
+        onReady: '&',
+        isPreview: '=?',
+        readOnly: '=?',
+        onImageSelection: '&',
+        uploadUrl: '=',
+      },
+      templateUrl: 'mw-form-image-builder.html',
+      controllerAs: 'ctrl',
+      bindToController: true,
+      controller: ["$timeout", "FormImageBuilderId", "mwFormUuid", "Upload", "$q", function ($timeout, FormImageBuilderId, mwFormUuid, Upload, $q) {
+        var ctrl = this;
+        ctrl.id = FormImageBuilderId.next();
+        ctrl.formSubmitted = false;
 
-            ctrl.save=function(){
-                ctrl.formSubmitted=true;
-                if(ctrl.form.$valid){
-                    ctrl.onReady();
-                }
-            };
+        ctrl.save = function () {
+          ctrl.formSubmitted = true;
+          if (ctrl.form.$valid) {
+            ctrl.onReady();
+          }
+        };
 
-            ctrl.selectImageButtonClicked = function(){
-                var resultPromise = ctrl.onImageSelection();
-                resultPromise.then(function(imageSrc){
-                   ctrl.image.src = imageSrc;
+        ctrl.selectImageButtonClicked = function (image) {
+          if (image) {
+            var promises = [];
+            promises.push(Upload.upload({
+              url: ctrl.uploadUrl,
+              method: 'POST',
+              data: {
+                file: image,
+                maxWidth: 876,
+              },
+            })
+              .then(function (response) {
+                ctrl.image.src = response.data.filePath;
+                //ctrl.execCommand('insertimage', response.data.filePath);
+              })
+              .catch(function (error) {
+                //$rootScope.$broadcast(WysiwygEditorEvents.IMAGE_ERROR, error);
+                return $q.reject(error);
+              }));
+            return $q.all(promises);
+          }
+          return $q.reject('no images or uploadurl defined');
 
-                }).catch(function(){
+        };
 
-                });
-            };
-
-            ctrl.setAlign = function(align){
-                ctrl.image.align = align;
-            }
-
-
-        }],
-        link: function (scope, ele, attrs, formPageElementBuilder){
-            var ctrl = scope.ctrl;
+        ctrl.setAlign = function (align) {
+          ctrl.image.align = align;
         }
+
+
+      }],
+      link: function (scope, ele, attrs, formPageElementBuilder) {
+        var ctrl = scope.ctrl;
+      }
     };
-});
+  });
 
 angular.module('mwFormBuilder').directive('mwFormConfirmationPageBuilder', function () {
 
@@ -1182,236 +1198,236 @@ angular.module('mwFormBuilder').directive('mwFormConfirmationPageBuilder', funct
     };
 });
 
-
 angular.module('mwFormBuilder').directive('mwFormBuilder', ["$rootScope", function ($rootScope) {
 
-    return {
-        replace: true,
-        restrict: 'AE',
-        scope: {
-            formData: '=',
-            readOnly: '=?',
-            options: '=?',
-            formStatus: '=?',
-            onImageSelection: '&',
-            api: '=?'
-        },
-        templateUrl: 'mw-form-builder.html',
-        controllerAs: 'ctrl',
-        bindToController: true,
-        controller: ["mwFormUuid", "MW_QUESTION_TYPES", "mwFormBuilderOptions", function(mwFormUuid, MW_QUESTION_TYPES, mwFormBuilderOptions){
-            var ctrl = this;
-            // Put initialization logic inside `$onInit()`
-            // to make sure bindings have been initialized.
-            ctrl.$onInit = function() {
-                ctrl.currentPage = 0;
+  return {
+    replace: true,
+    restrict: 'AE',
+    scope: {
+      formData: '=',
+      readOnly: '=?',
+      options: '=?',
+      formStatus: '=?',
+      onImageSelection: '&',
+      api: '=?',
+      uploadUrl: '=',
+    },
+    templateUrl: 'mw-form-builder.html',
+    controllerAs: 'ctrl',
+    bindToController: true,
+    controller: ["mwFormUuid", "MW_QUESTION_TYPES", "mwFormBuilderOptions", function (mwFormUuid, MW_QUESTION_TYPES, mwFormBuilderOptions) {
+      var ctrl = this;
+      // Put initialization logic inside `$onInit()`
+      // to make sure bindings have been initialized.
+      ctrl.$onInit = function () {
+        ctrl.currentPage = 0;
 
-                if(!ctrl.formData.pages || !ctrl.formData.pages.length){
-                    ctrl.formData.pages = [];
-                    ctrl.formData.pages.push(createEmptyPage(1));
-                }
-
-                ctrl.options = mwFormBuilderOptions.$init(ctrl.options);
-
-                if(ctrl.api){
-                    ctrl.api.reset = function(){
-                        for (var prop in ctrl.formData) {
-                            if (ctrl.formData.hasOwnProperty(prop) && prop != 'pages') {
-                                delete ctrl.formData[prop];
-                            }
-                        }
-
-                        ctrl.formData.pages.length=0;
-                        ctrl.formData.pages.push(createEmptyPage(1));
-
-                    }
-                }
-            };
-            
-
-            ctrl.numberOfPages=function(){
-                return Math.ceil(ctrl.formData.pages.length/ctrl.options.pageSize);                
-            };
-            ctrl.lastPage = function(){
-               ctrl.currentPage = Math.ceil(ctrl.formData.pages.length/ctrl.options.pageSize - 1); 
-            };
-            ctrl.addPage = function(){
-                ctrl.formData.pages.push(createEmptyPage(ctrl.formData.pages.length+1));
-                ctrl.lastPage();
-                $rootScope.$broadcast("mwForm.pageEvents.pageAdded");
-            };
-            ctrl.onChangePageSize = function(){
-                if(ctrl.currentPage > Math.ceil(ctrl.formData.pages.length/ctrl.options.pageSize - 1)){
-                   ctrl.currentPage = Math.ceil(ctrl.formData.pages.length/ctrl.options.pageSize - 1); 
-                }
-            };
-            
-
-            function createEmptyPage(number){
-                var defaultPageFlow = null;
-                if(ctrl.possiblePageFlow){
-                    defaultPageFlow = ctrl.possiblePageFlow[0];
-                }
-
-                return {
-                    id: mwFormUuid.get(),
-                    number: number,
-                    name: null,
-                    description: null,
-                    pageFlow: defaultPageFlow,
-                    elements: []
-                };
-            }
-
-            function updatePageNumbers() {
-                for(var i=0; i<ctrl.formData.pages.length; i++){
-                    ctrl.formData.pages[i].number = i+1;
-                }
-                ctrl.updatePageFlow();
-            }
-
-            ctrl.addPageAfter=function(page){
-                var index = ctrl.formData.pages.indexOf(page);
-                var newIndex = index+1;
-                var newPage = createEmptyPage(page.number+1);
-                if(newIndex<ctrl.formData.pages.length){
-                    ctrl.formData.pages.splice(newIndex,0, newPage);
-                }else{
-                    ctrl.formData.pages.push(newPage);
-                }
-                updatePageNumbers();
-                $rootScope.$broadcast("mwForm.pageEvents.pageAdded");
-
-            };
-
-            ctrl.moveDownPage= function(page){
-                var fromIndex = ctrl.formData.pages.indexOf(page);
-                var toIndex=fromIndex+1;
-                if(toIndex<ctrl.formData.pages.length){
-                    arrayMove(ctrl.formData.pages, fromIndex, toIndex);
-                }
-                updatePageNumbers();
-                $rootScope.$broadcast("mwForm.pageEvents.pageMoved");
-
-            };
-
-            ctrl.moveUpPage= function(page){
-                var fromIndex = ctrl.formData.pages.indexOf(page);
-                var toIndex=fromIndex-1;
-                if(toIndex>=0){
-                    arrayMove(ctrl.formData.pages, fromIndex, toIndex);
-                }
-                updatePageNumbers();
-                $rootScope.$broadcast("mwForm.pageEvents.pageMoved");
-
-            };
-
-            ctrl.removePage=function(page){
-                var index = ctrl.formData.pages.indexOf(page);
-                ctrl.formData.pages.splice(index,1);
-                updatePageNumbers();
-                $rootScope.$broadcast("mwForm.pageEvents.pageRemoved");
-                ctrl.onChangePageSize();
-            };
-
-            function arrayMove(arr, fromIndex, toIndex) {
-                var element = arr[fromIndex];
-                arr.splice(fromIndex, 1);
-                arr.splice(toIndex, 0, element);
-            }
-
-            // Prior to v1.5, we need to call `$onInit()` manually.
-            // (Bindings will always be pre-assigned in these versions.)
-            if (angular.version.major === 1 && angular.version.minor < 5) {
-                ctrl.$onInit();
-            }
-
-        }],
-        link: function (scope, ele, attrs){
-            var ctrl = scope.ctrl;
-            if(ctrl.formStatus){
-                ctrl.formStatus.form = ctrl.form;
-            }
-
-            ctrl.possiblePageFlow = [];
-            var defaultPageFlow = {
-                nextPage: true,
-                label: 'target.mwForm.pageFlow.goToNextPage'
-            };
-            ctrl.possiblePageFlow.push(defaultPageFlow);
-            ctrl.isSamePageFlow = function (p1, p2){
-                return (p1.page && p2.page &&  p1.page.id==p2.page.id) || p1.formSubmit && p2.formSubmit || p1.nextPage && p2.nextPage;
-            };
-
-            ctrl.updatePageFlow = function(){
-                ctrl.possiblePageFlow.length=1;
-
-                ctrl.formData.pages.forEach(function(page){
-
-                    ctrl.possiblePageFlow.push({
-                        page:{
-                            id: page.id,
-                            number: page.number
-                        },
-                        label: 'target.mwForm.pageFlow.goToPage'
-                    });
-                });
-
-                ctrl.possiblePageFlow.push({
-                    formSubmit:true,
-                    label: 'target.mwForm.pageFlow.submitForm'
-                });
-                ctrl.formData.pages.forEach(function(page){
-                    ctrl.possiblePageFlow.forEach(function(pageFlow){
-                        if(page.pageFlow) {
-                            if(ctrl.isSamePageFlow(pageFlow, page.pageFlow)){
-                                page.pageFlow = pageFlow;
-                            }
-                        }else{
-                            page.pageFlow = defaultPageFlow;
-                        }
-
-                        page.elements.forEach(function(element){
-                            var question = element.question;
-                            if(question && question.pageFlowModifier){
-                                question.offeredAnswers.forEach(function(answer){
-                                    if(answer.pageFlow){
-                                        if(ctrl.isSamePageFlow(pageFlow, answer.pageFlow)){
-                                            answer.pageFlow = pageFlow;
-                                        }
-                                    }
-                                });
-                            }
-
-                        });
-                    });
-                });
-            };
-
-            scope.$watch('ctrl.formData.pages.length', function(newVal, oldVal){
-                ctrl.updatePageFlow();
-            });
-            scope.$watch('ctrl.currentPage', function(newVal, oldVal){
-                $rootScope.$broadcast("mwForm.pageEvents.pageCurrentChanged",{index:ctrl.currentPage});
-            });
-            scope.$on('mwForm.pageEvents.changePage', function(event,data){
-                if(typeof data.page !== "undefined" && data.page < ctrl.numberOfPages()){
-                   ctrl.currentPage = data.page;
-                }
-            });
-            scope.$on('mwForm.pageEvents.addPage', function(event,data){
-                ctrl.addPage();
-            });
+        if (!ctrl.formData.pages || !ctrl.formData.pages.length) {
+          ctrl.formData.pages = [];
+          ctrl.formData.pages.push(createEmptyPage(1));
         }
-    };
+
+        ctrl.options = mwFormBuilderOptions.$init(ctrl.options);
+
+        if (ctrl.api) {
+          ctrl.api.reset = function () {
+            for (var prop in ctrl.formData) {
+              if (ctrl.formData.hasOwnProperty(prop) && prop != 'pages') {
+                delete ctrl.formData[prop];
+              }
+            }
+
+            ctrl.formData.pages.length = 0;
+            ctrl.formData.pages.push(createEmptyPage(1));
+
+          }
+        }
+      };
+
+
+      ctrl.numberOfPages = function () {
+        return Math.ceil(ctrl.formData.pages.length / ctrl.options.pageSize);
+      };
+      ctrl.lastPage = function () {
+        ctrl.currentPage = Math.ceil(ctrl.formData.pages.length / ctrl.options.pageSize - 1);
+      };
+      ctrl.addPage = function () {
+        ctrl.formData.pages.push(createEmptyPage(ctrl.formData.pages.length + 1));
+        ctrl.lastPage();
+        $rootScope.$broadcast("mwForm.pageEvents.pageAdded");
+      };
+      ctrl.onChangePageSize = function () {
+        if (ctrl.currentPage > Math.ceil(ctrl.formData.pages.length / ctrl.options.pageSize - 1)) {
+          ctrl.currentPage = Math.ceil(ctrl.formData.pages.length / ctrl.options.pageSize - 1);
+        }
+      };
+
+
+      function createEmptyPage(number) {
+        var defaultPageFlow = null;
+        if (ctrl.possiblePageFlow) {
+          defaultPageFlow = ctrl.possiblePageFlow[0];
+        }
+
+        return {
+          id: mwFormUuid.get(),
+          number: number,
+          name: null,
+          description: null,
+          pageFlow: defaultPageFlow,
+          elements: []
+        };
+      }
+
+      function updatePageNumbers() {
+        for (var i = 0; i < ctrl.formData.pages.length; i++) {
+          ctrl.formData.pages[i].number = i + 1;
+        }
+        ctrl.updatePageFlow();
+      }
+
+      ctrl.addPageAfter = function (page) {
+        var index = ctrl.formData.pages.indexOf(page);
+        var newIndex = index + 1;
+        var newPage = createEmptyPage(page.number + 1);
+        if (newIndex < ctrl.formData.pages.length) {
+          ctrl.formData.pages.splice(newIndex, 0, newPage);
+        } else {
+          ctrl.formData.pages.push(newPage);
+        }
+        updatePageNumbers();
+        $rootScope.$broadcast("mwForm.pageEvents.pageAdded");
+
+      };
+
+      ctrl.moveDownPage = function (page) {
+        var fromIndex = ctrl.formData.pages.indexOf(page);
+        var toIndex = fromIndex + 1;
+        if (toIndex < ctrl.formData.pages.length) {
+          arrayMove(ctrl.formData.pages, fromIndex, toIndex);
+        }
+        updatePageNumbers();
+        $rootScope.$broadcast("mwForm.pageEvents.pageMoved");
+
+      };
+
+      ctrl.moveUpPage = function (page) {
+        var fromIndex = ctrl.formData.pages.indexOf(page);
+        var toIndex = fromIndex - 1;
+        if (toIndex >= 0) {
+          arrayMove(ctrl.formData.pages, fromIndex, toIndex);
+        }
+        updatePageNumbers();
+        $rootScope.$broadcast("mwForm.pageEvents.pageMoved");
+
+      };
+
+      ctrl.removePage = function (page) {
+        var index = ctrl.formData.pages.indexOf(page);
+        ctrl.formData.pages.splice(index, 1);
+        updatePageNumbers();
+        $rootScope.$broadcast("mwForm.pageEvents.pageRemoved");
+        ctrl.onChangePageSize();
+      };
+
+      function arrayMove(arr, fromIndex, toIndex) {
+        var element = arr[fromIndex];
+        arr.splice(fromIndex, 1);
+        arr.splice(toIndex, 0, element);
+      }
+
+      // Prior to v1.5, we need to call `$onInit()` manually.
+      // (Bindings will always be pre-assigned in these versions.)
+      if (angular.version.major === 1 && angular.version.minor < 5) {
+        ctrl.$onInit();
+      }
+
+    }],
+    link: function (scope, ele, attrs) {
+      var ctrl = scope.ctrl;
+      if (ctrl.formStatus) {
+        ctrl.formStatus.form = ctrl.form;
+      }
+
+      ctrl.possiblePageFlow = [];
+      var defaultPageFlow = {
+        nextPage: true,
+        label: 'target.mwForm.pageFlow.goToNextPage'
+      };
+      ctrl.possiblePageFlow.push(defaultPageFlow);
+      ctrl.isSamePageFlow = function (p1, p2) {
+        return (p1.page && p2.page && p1.page.id == p2.page.id) || p1.formSubmit && p2.formSubmit || p1.nextPage && p2.nextPage;
+      };
+
+      ctrl.updatePageFlow = function () {
+        ctrl.possiblePageFlow.length = 1;
+
+        ctrl.formData.pages.forEach(function (page) {
+
+          ctrl.possiblePageFlow.push({
+            page: {
+              id: page.id,
+              number: page.number
+            },
+            label: 'target.mwForm.pageFlow.goToPage'
+          });
+        });
+
+        ctrl.possiblePageFlow.push({
+          formSubmit: true,
+          label: 'target.mwForm.pageFlow.submitForm'
+        });
+        ctrl.formData.pages.forEach(function (page) {
+          ctrl.possiblePageFlow.forEach(function (pageFlow) {
+            if (page.pageFlow) {
+              if (ctrl.isSamePageFlow(pageFlow, page.pageFlow)) {
+                page.pageFlow = pageFlow;
+              }
+            } else {
+              page.pageFlow = defaultPageFlow;
+            }
+
+            page.elements.forEach(function (element) {
+              var question = element.question;
+              if (question && question.pageFlowModifier) {
+                question.offeredAnswers.forEach(function (answer) {
+                  if (answer.pageFlow) {
+                    if (ctrl.isSamePageFlow(pageFlow, answer.pageFlow)) {
+                      answer.pageFlow = pageFlow;
+                    }
+                  }
+                });
+              }
+
+            });
+          });
+        });
+      };
+
+      scope.$watch('ctrl.formData.pages.length', function (newVal, oldVal) {
+        ctrl.updatePageFlow();
+      });
+      scope.$watch('ctrl.currentPage', function (newVal, oldVal) {
+        $rootScope.$broadcast("mwForm.pageEvents.pageCurrentChanged", {index: ctrl.currentPage});
+      });
+      scope.$on('mwForm.pageEvents.changePage', function (event, data) {
+        if (typeof data.page !== "undefined" && data.page < ctrl.numberOfPages()) {
+          ctrl.currentPage = data.page;
+        }
+      });
+      scope.$on('mwForm.pageEvents.addPage', function (event, data) {
+        ctrl.addPage();
+      });
+    }
+  };
 }]);
 
 
-angular.module('mwFormBuilder').filter('mwStartFrom', function() {
-    return function(input, start) {
-        start = +start; //parse to int
-        return input.slice(start);
-    };
+angular.module('mwFormBuilder').filter('mwStartFrom', function () {
+  return function (input, start) {
+    start = +start; //parse to int
+    return input.slice(start);
+  };
 });
 angular.module('mwFormBuilder')
     .constant('MW_QUESTION_TYPES', ['text', 'textarea', 'radio', 'checkbox', 'select'])

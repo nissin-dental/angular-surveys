@@ -3,7 +3,7 @@
     <div class="form-page-list">
       <mw-form-page-builder
               ng-repeat="page in ctrl.formData.pages| mwStartFrom:ctrl.currentPage * ctrl.options.pageSize | limitTo:ctrl.options.pageSize"
-              form-page="page" form-object="ctrl.formData" is-first="$first" is-last="$last"
+              form-page="page" form-object="ctrl.formData" upload-url="ctrl.uploadUrl" is-first="$first" is-last="$last"
               read-only="ctrl.readOnly"></mw-form-page-builder>
     </div>
   </form>
