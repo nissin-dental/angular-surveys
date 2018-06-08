@@ -10,7 +10,8 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             formObject: '=',
             isFirst: '=',
             isLast: '=',
-            readOnly: '=?'
+            readOnly: '=?',
+            uploadUrl: '=',
         },
         templateUrl: 'mw-form-page-builder.html',
         controllerAs: 'ctrl',
