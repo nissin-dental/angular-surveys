@@ -14,13 +14,13 @@
         <div ng-switch-when="radio">
             <div class="radio" ng-repeat="answer in ctrl.question.offeredAnswers">
                 <label>
-                    <input type="radio" ng-model="ctrl.questionResponse.selectedAnswer" ng-value="answer.id" name="answer-for-question-{{ctrl.question.id}}" ng-change="ctrl.selectedAnswerChanged()" ng-required="ctrl.question.required &&!ctrl.isOtherAnswer" ng-disabled="ctrl.readOnly">
+                    <input type="radio" ng-model="ctrl.questionResponse.selectedAnswer" ng-value="answer.id" name="answer-for-question-{{ctrl.question.id}}" ng-change="ctrl.selectedAnswerChanged(); ctrl.updateExplanation(answer)" ng-required="ctrl.question.required &&!ctrl.isOtherAnswer" ng-disabled="ctrl.readOnly">
                     {{::ctrl.print(answer.value)}}
                 </label>
             </div>
             <div class="radio" ng-if="ctrl.question.otherAnswer">
                 <label>
-                    <input type="radio" ng-model="ctrl.isOtherAnswer" ng-value="true" name="other-answer-for-question-{{ctrl.question.id}}" ng-change="ctrl.otherAnswerRadioChanged()" ng-disabled="ctrl.readOnly"><span translate="mwForm.question.preview.otherAnswer">Inna</span>:
+                    <input type="radio" ng-model="ctrl.isOtherAnswer" ng-value="true" name="other-answer-for-question-{{ctrl.question.id}}" ng-change="ctrl.otherAnswerRadioChanged(); ctrl.updateExplanation()" ng-disabled="ctrl.readOnly"><span translate="target.mwForm.question.preview.otherAnswer">Inna</span>:
                 </label>
                 <span class="form-inline">
                     <input type="text" name="other-answer-for-question-{{ctrl.question.id}}" ng-model="ctrl.questionResponse.other" class="form-control" ng-disabled="!ctrl.isOtherAnswer || ctrl.readOnly"
@@ -126,6 +126,8 @@
         <div ng-switch-when="url" class="form-inline">
             <input class="form-control" type="url" ng-model="ctrl.questionResponse.answer" ng-required="ctrl.question.required" ng-readonly="ctrl.readOnly">
         </div>
+
+        <textarea class="given-answer-explanation" ng-if="ctrl.explanation != null" ng-model="ctrl.explanation" ng-readonly="true"></textarea>
 
     </div>
 

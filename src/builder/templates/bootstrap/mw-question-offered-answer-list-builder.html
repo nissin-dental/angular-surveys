@@ -20,6 +20,9 @@
               popover-placement="top">
         <i class="fa fa-times"></i>
       </button>
+      <textarea type="text" ng-model="answer.explanation" ng-if="ctrl.question.type=='radio'"
+             class="form-control offered-answer-explanation" placeholder="Comment given once answered"
+             ng-readonly="ctrl.readOnly"></textarea>
     </div>
   </div>
   <div class="mw-question-offered-answer add-new-answer-widget" ng-if="!ctrl.readOnly">
