@@ -1,7 +1,7 @@
 <div class="mw-form-confirmation-page">
     <div class="mw-confirmation-message" ng-if="ctrl.submitStatus=='SUCCESS'">
         <span ng-if="ctrl.confirmationMessage"> {{::ctrl.print(ctrl.confirmationMessage)}}</span>
-        <span ng-if="!ctrl.confirmationMessage" translate="mwForm.confirmationPage.defaultMessage"> Twoja odpowiedź została zapisana</span>
+        <span ng-if="!ctrl.confirmationMessage" >{{'target.mwForm.confirmationPage.defaultSubmitMessage' | translate}}</span>
     </div>
     <div class="mw-error-message" ng-if="ctrl.submitStatus=='ERROR'">
         <span translate="mwForm.confirmationPage.errorMessage"> Bład. Twoja odpowiedź nie została zapisana.</span>
