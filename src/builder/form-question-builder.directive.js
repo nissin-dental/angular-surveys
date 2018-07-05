@@ -75,12 +75,16 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
 
 
 
-            var questionTypesWithOfferedAnswers = ['radio', 'checkbox', 'select'];
+            var questionTypesWithOfferedAnswers = ['radio', 'checkbox'];
 
             ctrl.questionTypeChanged = function(){
                 if( questionTypesWithOfferedAnswers.indexOf(ctrl.question.type) !== -1){
                     if(!ctrl.question.offeredAnswers){
                         ctrl.question.offeredAnswers=[];
+                    } else if (ctrl.question.offeredAnswers != null && ctrl.question.offeredAnswers.length > 1 && ctrl.question.type === 'radio') {
+                      ctrl.question.offeredAnswers.forEach(function(offeredAnswer) {
+                          offeredAnswer.correctAnswer = false;
+                      });
                     }
 
                 }

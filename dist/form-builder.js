@@ -200,7 +200,6 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
     bindToController: true,
     controller: ["FormQuestionBuilderId", "mwFormUuid", function (FormQuestionBuilderId, mwFormUuid) {
       var ctrl = this;
-
       // Put initialization logic inside `$onInit()`
       // to make sure bindings have been initialized.
       this.$onInit = function () {
@@ -254,6 +253,7 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
           value: null,
           pageFlow: defaultPageFlow,
           explanation: '',
+          correctAnswer: false,
         };
         ctrl.isNewAnswer[answer.id] = true;
         ctrl.question.offeredAnswers.push(answer);
@@ -281,6 +281,16 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
         }
 
 
+      };
+
+      ctrl.updateMaxCorrectAnswers = function(answer) {
+        if(ctrl.question.type === 'radio') {
+          ctrl.question.offeredAnswers.forEach(function(offeredAnswer) {
+            if(offeredAnswer.id != answer.id) {
+              offeredAnswer.correctAnswer = false;
+            }
+          });
+        }
       };
 
       // Prior to v1.5, we need to call `$onInit()` manually.
@@ -646,12 +656,16 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
 
 
 
-            var questionTypesWithOfferedAnswers = ['radio', 'checkbox', 'select'];
+            var questionTypesWithOfferedAnswers = ['radio', 'checkbox'];
 
             ctrl.questionTypeChanged = function(){
                 if( questionTypesWithOfferedAnswers.indexOf(ctrl.question.type) !== -1){
                     if(!ctrl.question.offeredAnswers){
                         ctrl.question.offeredAnswers=[];
+                    } else if (ctrl.question.offeredAnswers != null && ctrl.question.offeredAnswers.length > 1 && ctrl.question.type === 'radio') {
+                      ctrl.question.offeredAnswers.forEach(function(offeredAnswer) {
+                          offeredAnswer.correctAnswer = false;
+                      });
                     }
 
                 }

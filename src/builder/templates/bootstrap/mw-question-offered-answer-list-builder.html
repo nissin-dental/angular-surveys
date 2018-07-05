@@ -23,6 +23,11 @@
       <textarea type="text" ng-model="answer.explanation" ng-if="ctrl.question.type=='radio'"
              class="form-control offered-answer-explanation" placeholder="Comment given once answered"
              ng-readonly="ctrl.readOnly"></textarea>
+      <div class="checkbox">
+        <label>
+          <input class="correct-answer-checkbox" ng-change="ctrl.updateMaxCorrectAnswers(answer)" type="checkbox" ng-model="answer.correctAnswer"><span>{{'target.mwForm.questions.correct-answer' | translate}}</span>
+        </label>
+      </div>
     </div>
   </div>
   <div class="mw-question-offered-answer add-new-answer-widget" ng-if="!ctrl.readOnly">
