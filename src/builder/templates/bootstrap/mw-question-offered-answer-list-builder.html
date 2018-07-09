@@ -41,9 +41,6 @@
             <input type="text" class="form-control  offered-answer-value"
                    value="{{'target.mwForm.question.buttons.addOption'|translate}}">
         </span>
-    <span class="add-custom-answer" ng-if="!ctrl.disableOtherAnswer && !ctrl.question.otherAnswer">
-            <button role="button" ng-click="ctrl.addCustomAnswer()" translate="target.mwForm.question.buttons.addOther">Dodaj "Inne"</button>
-        </span>
   </div>
   <div class="mw-question-offered-answer custom-answer" ng-if="ctrl.question.otherAnswer">
     <div class="drag-handle" ng-if="!ctrl.readOnly">

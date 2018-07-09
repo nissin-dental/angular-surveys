@@ -7,7 +7,7 @@
           <mw-label label-for="question-text-{{ctrl.id}}" label-class="col-sm-2 control-label"
                     label-key="target.mwForm.questions.question-text"></mw-label>
           <div class="col-sm-10 col-md-8">
-            <input type="text" class="form-control" name="text" ng-attr-id="question-text-{{ctrl.id}}"
+            <textarea type="text" class="form-control" name="text" ng-attr-id="question-text-{{ctrl.id}}"
                    ng-model="ctrl.question.text" ng-readonly="ctrl.readOnly" required>
           </div>
         </div>
@@ -17,7 +17,7 @@
           <div class="col-sm-10 form-inline">
             <select ng-attr-id="question-type-{{ctrl.id}}"
                     ng-options="'target.mwForm.question.types.'+type+''| translate for type in ctrl.questionTypes"
-                    ng-model="ctrl.question.type" ng-change="ctrl.questionTypeChanged()" class="form-control"
+                    ng-model="ctrl.question.type" ng-change="ctrl.questionTypeChanged()" class="form-control question-type-select"
                     ng-disabled="ctrl.readOnly" required></select>
           </div>
         </div>
@@ -70,7 +70,7 @@
       <br/> <br/>
       <div class="row">
         <div class="col-xs-2">
-          <button type="button" class="btn btn-primary" ng-click="ctrl.save()">{{'target.mwForm.questions.save-question' | translate}}</button>
+          <button type="button" class="moog-button large"  ng-click="ctrl.save()">{{'target.mwForm.questions.save-question' | translate}}</button>
         </div>
         <div class="col-xs-10">
           <div class="checkbox">

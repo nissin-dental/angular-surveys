@@ -127,7 +127,7 @@
             <input class="form-control" type="url" ng-model="ctrl.questionResponse.answer" ng-required="ctrl.question.required" ng-readonly="ctrl.readOnly">
         </div>
 
-        <textarea class="given-answer-explanation" ng-if="ctrl.explanation != null" ng-model="ctrl.explanation" ng-readonly="true"></textarea>
+        <div class="given-answer-explanation" ng-if="ctrl.explanation != null" ng-readonly="true">{{ctrl.explanation}}</div>
 
     </div>
 
