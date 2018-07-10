@@ -133,7 +133,7 @@ angular.module('mwFormViewer').directive('mwFormViewer', ["$rootScope", function
         templateUrl: 'mw-form-viewer.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: ["$timeout", "$interpolate", function($timeout, $interpolate){
+        controller: ["$timeout", "$interpolate", "IScrollEvents", function($timeout, $interpolate, IScrollEvents){
             var ctrl = this;
             // Put initialization logic inside `$onInit()`
             // to make sure bindings have been initialized.
@@ -198,8 +198,9 @@ angular.module('mwFormViewer').directive('mwFormViewer', ["$rootScope", function
 
 
                 var resultPromise = ctrl.onSubmit();
+                $rootScope.$emit(IScrollEvents.REFRESH);
                 resultPromise.then(function(){
-                    ctrl.submitStatus='SUCCESS';
+                  ctrl.submitStatus='SUCCESS';
                 }).catch(function(){
                     ctrl.submitStatus='ERROR';
                 });
@@ -404,7 +405,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
       templateUrl: 'mw-form-question.html',
       controllerAs: 'ctrl',
       bindToController: true,
-      controller: ["$timeout", "FormQuestionId", "_", function ($timeout, FormQuestionId, _) {
+      controller: ["$timeout", "FormQuestionId", "_", "IScrollEvents", "$rootScope", function ($timeout, FormQuestionId, _, IScrollEvents, $rootScope) {
         var ctrl = this;
         ctrl.explanation = null;
         // Put initialization logic inside `$onInit()`
@@ -514,6 +515,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
 
         ctrl.updateExplanation = function (answer) {
           ctrl.explanation = answer != null && answer.explanation != '' && answer.explanation != null ? answer.explanation : null;
+          $rootScope.$emit(IScrollEvents.REFRESH);
         };
 
         // Prior to v1.5, we need to call `$onInit()` manually.

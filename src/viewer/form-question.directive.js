@@ -23,7 +23,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
       templateUrl: 'mw-form-question.html',
       controllerAs: 'ctrl',
       bindToController: true,
-      controller: function ($timeout, FormQuestionId, _) {
+      controller: function ($timeout, FormQuestionId, _, IScrollEvents, $rootScope) {
         var ctrl = this;
         ctrl.explanation = null;
         // Put initialization logic inside `$onInit()`
@@ -133,6 +133,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
 
         ctrl.updateExplanation = function (answer) {
           ctrl.explanation = answer != null && answer.explanation != '' && answer.explanation != null ? answer.explanation : null;
+          $rootScope.$emit(IScrollEvents.REFRESH);
         };
 
         // Prior to v1.5, we need to call `$onInit()` manually.
