@@ -16,7 +16,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
         templateUrl: 'mw-form-page-builder.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions){
+        controller: function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions, IScrollEvents){
             var ctrl = this;
             // Put initialization logic inside `$onInit()`
             // to make sure bindings have been initialized.
@@ -131,6 +131,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             };
 
             ctrl.selectElement = function(element){
+                $rootScope.$emit(IScrollEvents.REFRESH);
                 ctrl.activeElement=element;
             };
 
