@@ -24,7 +24,7 @@ angular.module('mwFormBuilder').factory("FormParagraphBuilderId", function(){
         templateUrl: 'mw-form-paragraph-builder.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: function($timeout,FormParagraphBuilderId){
+        controller: function($timeout,FormParagraphBuilderId, $rootScope){
             var ctrl = this;
 
             // Put initialization logic inside `$onInit()`
@@ -40,6 +40,10 @@ angular.module('mwFormBuilder').factory("FormParagraphBuilderId", function(){
                     ctrl.onReady();
                 }
             };
+
+          $rootScope.$on('validateForm', function() {
+            ctrl.save();
+          });
 
             // Prior to v1.5, we need to call `$onInit()` manually.
             // (Bindings will always be pre-assigned in these versions.)

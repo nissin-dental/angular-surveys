@@ -31,6 +31,9 @@
     </div>
   </div>
   <div class="mw-question-offered-answer add-new-answer-widget" ng-if="!ctrl.readOnly">
+    <div ng-if="(ctrl.question.type == 'radio' || ctrl.question.type == 'checkbox') && ctrl.question.offeredAnswers.length < 2" class="min-answers-text">
+      {{'target.mwForm.questions.min-answers' | translate}}
+    </div>
     <div class="drag-handle">
     </div>
     <div class="option-type-indicator">

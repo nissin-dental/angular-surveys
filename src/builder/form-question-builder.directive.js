@@ -24,7 +24,7 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
         templateUrl: 'mw-form-question-builder.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: function($timeout,FormQuestionBuilderId, mwFormBuilderOptions){
+        controller: function($timeout,FormQuestionBuilderId, mwFormBuilderOptions, $rootScope){
             var ctrl = this;
 
 
@@ -68,12 +68,19 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
             ctrl.save=function(){
                 ctrl.formSubmitted=true;
                 if(ctrl.form.$valid){
-                    ctrl.onReady();
+                if(ctrl.question.type === 'radio' || ctrl.question.type === 'checkbox') {
+                  if (ctrl.question.offeredAnswers.length > 1) {
+                      ctrl.onReady();
+                    }
+                } else {
+                  ctrl.onReady();
                 }
-
+              }
             };
 
-
+            $rootScope.$on('validateForm', function() {
+                ctrl.save();
+            });
 
             var questionTypesWithOfferedAnswers = ['radio', 'checkbox'];
 

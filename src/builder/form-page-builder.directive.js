@@ -16,7 +16,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
         templateUrl: 'mw-form-page-builder.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions, IScrollEvents){
+        controller: function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions, IScrollEvents, Upload, $q){
             var ctrl = this;
             // Put initialization logic inside `$onInit()`
             // to make sure bindings have been initialized.
@@ -67,13 +67,17 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
 
 
 
-            ctrl.addElement = function(type){
-                if(!type){
+            ctrl.addElement = function(type, src){
+              if(!type){
 
                     type=mwFormBuilderOptions.elementTypes[0];
                 }
                 var element = createEmptyElement(type, ctrl.formPage.elements.length + 1);
-                ctrl.activeElement=element;
+
+              if (type === 'image') {
+                element.image = {src : src};
+              }
+              ctrl.activeElement=element;
                 ctrl.formPage.elements.push(element);
             };
 
@@ -88,8 +92,9 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             };
 
             ctrl.removeElement = function(pageElement){
-                var index = ctrl.formPage.elements.indexOf(pageElement);
-                ctrl.formPage.elements.splice(index,1);
+              var index = ctrl.formPage.elements.indexOf(pageElement);
+              ctrl.formPage.elements.splice(index, 1);
+              ctrl.activeElement = null;
             };
 
             ctrl.moveDownElement= function(pageElement){
@@ -115,15 +120,27 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             };
 
             ctrl.addQuestion = function(){
+              if (validateOpenElement() === true) {
                 ctrl.addElement('question');
+              } else {
+                $rootScope.$emit('validateForm');
+              }
             };
 
-            ctrl.addImage = function(){
-                ctrl.addElement('image');
+            ctrl.addImage = function(src){
+              if (validateOpenElement() === true) {
+                ctrl.addElement('image', src);
+              } else {
+                $rootScope.$emit('validateForm');
+              }
             };
 
             ctrl.addParagraph= function(){
+              if (validateOpenElement() === true) {
                 ctrl.addElement('paragraph');
+              } else {
+                $rootScope.$emit('validateForm');
+              }
             };
 
             ctrl.isElementActive= function(element){
@@ -131,8 +148,10 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             };
 
             ctrl.selectElement = function(element){
+              if (validateOpenElement() === true) {
                 $rootScope.$emit(IScrollEvents.REFRESH);
-                ctrl.activeElement=element;
+                ctrl.activeElement = element;
+              }
             };
 
             ctrl.onElementReady = function(){
@@ -140,6 +159,54 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
                     ctrl.activeElement=null;
                 });
             };
+
+          ctrl.selectImageButtonClicked = function (image) {
+            if (image && validateOpenElement() === true) {
+              var promises = [];
+              promises.push(Upload.upload({
+                url: ctrl.uploadUrl,
+                method: 'POST',
+                data: {
+                  file: image,
+                  maxWidth: 876,
+                },
+              })
+                .then(function (response) {
+                  ctrl.addImage(response.data.filePath);
+                })
+                .catch(function (error) {
+                  return $q.reject(error);
+                }));
+              return $q.all(promises);
+            } else {
+              $rootScope.$emit('validateForm');
+              return $q.reject('no images or uploadurl defined');
+            }
+          };
+
+            function validateOpenElement() {
+                var noElementSelected = ctrl.activeElement === null;
+                var validElement = true;
+
+                if (noElementSelected === false) {
+                  var element = ctrl.activeElement[ctrl.activeElement.type];
+                  switch(ctrl.activeElement.type) {
+                    case 'question' :
+                      validElement = element.text != null &&
+                        element.type != null;
+                      if(element.type === 'radio' || element.type === 'checkbox') {
+                        validElement = element.offeredAnswers.length > 1;
+                        element.offeredAnswers.forEach(function(answer) {
+                          validElement = validElement === false ? false : (answer.text != null && answer.text !== '') || (answer.value != null && answer.value !== '');
+                        });
+                      }
+                      break;
+                    case 'image' : validElement = element.src != null; break;
+                    case 'paragraph' : validElement = element.html !== ''; break;
+                  }
+                }
+              return noElementSelected || validElement;
+            }
 
             function createEmptyElement(type,orderNo){
                 return {
