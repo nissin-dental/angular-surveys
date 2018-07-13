@@ -25,7 +25,7 @@ angular.module('mwFormBuilder').factory("FormImageBuilderId", function () {
       templateUrl: 'mw-form-image-builder.html',
       controllerAs: 'ctrl',
       bindToController: true,
-      controller: function ($timeout, FormImageBuilderId, mwFormUuid, Upload, $q) {
+      controller: function ($timeout, FormImageBuilderId) {
         var ctrl = this;
         ctrl.id = FormImageBuilderId.next();
         ctrl.formSubmitted = false;
@@ -37,38 +37,13 @@ angular.module('mwFormBuilder').factory("FormImageBuilderId", function () {
           }
         };
 
-        ctrl.selectImageButtonClicked = function (image) {
-          if (image) {
-            var promises = [];
-            promises.push(Upload.upload({
-              url: ctrl.uploadUrl,
-              method: 'POST',
-              data: {
-                file: image,
-                maxWidth: 876,
-              },
-            })
-              .then(function (response) {
-                ctrl.image.src = response.data.filePath;
-                //ctrl.execCommand('insertimage', response.data.filePath);
-              })
-              .catch(function (error) {
-                //$rootScope.$broadcast(WysiwygEditorEvents.IMAGE_ERROR, error);
-                return $q.reject(error);
-              }));
-            return $q.all(promises);
-          }
-          return $q.reject('no images or uploadurl defined');
-
-        };
-
         ctrl.setAlign = function (align) {
           ctrl.image.align = align;
         }
 
 
       },
-      link: function (scope, ele, attrs, formPageElementBuilder) {
+      link: function (scope) {
         var ctrl = scope.ctrl;
       }
     };
