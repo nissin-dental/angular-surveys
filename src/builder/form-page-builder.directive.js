@@ -151,6 +151,10 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
               if (validateOpenElement() === true) {
                 $rootScope.$emit(IScrollEvents.REFRESH);
                 ctrl.activeElement = element;
+              } else {
+                if (ctrl.activeElement.id !== element.id) {
+                  $rootScope.$emit('validateForm');
+                }
               }
             };
 
