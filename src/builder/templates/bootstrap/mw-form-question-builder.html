@@ -32,6 +32,13 @@
 
           </div>
         </div>
+        <div class="col-xs-10">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="ctrl.question.required" ng-disabled="ctrl.readOnly"><span>{{'target.mwForm.questions.required' | translate}}</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="row" ng-if="ctrl.question.type">
@@ -69,13 +76,7 @@
         <div class="col-xs-2">
           <button type="button" class="moog-button large"  ng-click="ctrl.save()">{{'target.mwForm.questions.save-question' | translate}}</button>
         </div>
-        <div class="col-xs-10">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="ctrl.question.required" ng-disabled="ctrl.readOnly"><span>{{'target.mwForm.questions.required' | translate}}</span>
-            </label>
-          </div>
-        </div>
+
 
       </div>
 

@@ -36,6 +36,17 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
             updateAnswersOrderNo();
           }
         };
+
+        if (ctrl.question.offeredAnswers.length === 0) {
+          var focus = false;
+          var addAnswer = function() {
+            if (ctrl.question.offeredAnswers.length < 2) {
+              ctrl.addNewOfferedAnswer(focus);
+              addAnswer();
+            }
+          };
+          addAnswer();
+        }
       };
 
 
@@ -59,9 +70,8 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
         }
       }
 
-      ctrl.addNewOfferedAnswer = function () {
-
-        var defaultPageFlow = ctrl.possiblePageFlow[0];
+      ctrl.addNewOfferedAnswer = function (focus) {
+        var defaultPageFlow = ctrl.possiblePageFlow != null ? ctrl.possiblePageFlow[0] : {nextPage: true, label: "target.mwForm.pageFlow.goToNextPage"};
 
         var answer = {
           id: mwFormUuid.get(),
@@ -71,7 +81,9 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
           explanation: '',
           correctAnswer: false,
         };
-        ctrl.isNewAnswer[answer.id] = true;
+        if(focus == null || focus === true) {
+          ctrl.isNewAnswer[answer.id] = true;
+        }
         ctrl.question.offeredAnswers.push(answer);
       };
 
