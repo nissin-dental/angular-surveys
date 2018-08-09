@@ -16,8 +16,9 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
         templateUrl: 'mw-form-page-builder.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions, IScrollEvents, Upload, $q){
+        controller: function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions, IScrollEvents, Upload, $q, $){
             var ctrl = this;
+            var ignoreCloseEdit = false;
             // Put initialization logic inside `$onInit()`
             // to make sure bindings have been initialized.
             ctrl.$onInit = function() {
@@ -122,6 +123,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             ctrl.addQuestion = function(){
               if (validateOpenElement() === true) {
                 ctrl.addElement('question');
+                ignoreCloseEdit = true;
               } else {
                 $rootScope.$emit('validateForm');
               }
@@ -130,6 +132,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             ctrl.addImage = function(src){
               if (validateOpenElement() === true) {
                 ctrl.addElement('image', src);
+                ignoreCloseEdit = true;
               } else {
                 $rootScope.$emit('validateForm');
               }
@@ -138,6 +141,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             ctrl.addParagraph= function(){
               if (validateOpenElement() === true) {
                 ctrl.addElement('paragraph');
+                ignoreCloseEdit = true;
               } else {
                 $rootScope.$emit('validateForm');
               }
@@ -151,6 +155,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
               if (validateOpenElement() === true) {
                 $rootScope.$emit(IScrollEvents.REFRESH);
                 ctrl.activeElement = element;
+                ignoreCloseEdit = true;
               } else {
                 if (ctrl.activeElement.id !== element.id) {
                   $rootScope.$emit('validateForm');
@@ -242,6 +247,31 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             if (angular.version.major === 1 && angular.version.minor < 5) {
                 ctrl.$onInit();
             }
+
+
+            $(document).on('click', function(element) {
+              if (ctrl.activeElement != null && ignoreCloseEdit === false) {
+                var targetElement = element.target;
+                var elementClickedOutsideEdit = targetElement.closest('.mw-form-page-element-builder.active') == null;
+                  if (elementClickedOutsideEdit === true) {
+                  if (validateOpenElement() === true) {
+                    ctrl.activeElement=null;
+                    $timeout(function() {
+                      $rootScope.$emit(IScrollEvents.REFRESH);
+                    },0);
+                  } else {
+                    $rootScope.$emit('validateForm');
+                  }
+                }
+              } else {
+                ignoreCloseEdit = false;
+              }
+            });
+
+
+            ctrl.$onDestroy = function() {
+              $(document).off('click');
+            };
 
         },
         link: function (scope, ele, attrs, formBuilderCtrl){

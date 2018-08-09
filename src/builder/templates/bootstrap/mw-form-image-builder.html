@@ -27,21 +27,12 @@
               <input type="text" class="form-control image-description-input" name="text" ng-attr-id="image-caption-{{ctrl.id}}"
                      ng-model="ctrl.image.caption" ng-readonly="ctrl.readOnly">
             </div>
-
-
           </div>
         </div>
       </div>
 
 
-      <div class="row" ng-if="ctrl.image.src">
-        <br/> <br/>
-        <div class="col-xs-2">
-          <button type="button" class="moog-button large"  ng-click="ctrl.save()">{{'target.mwForm.questions.save-image' |
-            translate}}
-          </button>
-        </div>
-      </div>
+      <div class="row" ng-if="ctrl.image.src"></div>
 
     </div>
     <div class="mw-preview" ng-if="ctrl.isPreview">
