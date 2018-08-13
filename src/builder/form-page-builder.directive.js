@@ -193,29 +193,28 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             }
           };
 
-            function validateOpenElement() {
-                var noElementSelected = ctrl.activeElement === null;
-                var validElement = true;
+          function validateOpenElement() {
+            var noElementSelected = ctrl.activeElement === null;
+            var validElement = true;
 
-                if (noElementSelected === false) {
-                  var element = ctrl.activeElement[ctrl.activeElement.type];
-                  switch(ctrl.activeElement.type) {
-                    case 'question' :
-                      validElement = element.text != null &&
-                        element.type != null;
-                      if(element.type === 'radio' || element.type === 'checkbox') {
-                        validElement = element.offeredAnswers.length > 1;
-                        element.offeredAnswers.forEach(function(answer) {
-                          validElement = validElement === false ? false : (answer.text != null && answer.text !== '') || (answer.value != null && answer.value !== '');
-                        });
-                      }
-                      break;
-                    case 'image' : validElement = element.src != null; break;
-                    case 'paragraph' : validElement = element.html !== ''; break;
+            if (noElementSelected === false) {
+              var element = ctrl.activeElement[ctrl.activeElement.type];
+              switch(ctrl.activeElement.type) {
+                case 'question' :
+                  validElement = (element.text != null && element.type != null);
+                  if(element.type === 'radio' || element.type === 'checkbox') {
+                    validElement = validElement === false ? false : element.offeredAnswers.length > 1;
+                    element.offeredAnswers.forEach(function(answer) {
+                      validElement = validElement === false ? false : (answer.text != null && answer.text !== '') || (answer.value != null && answer.value !== '');
+                    });
                   }
-                }
-              return noElementSelected || validElement;
+                  break;
+                case 'image' : validElement = element.src != null; break;
+                case 'paragraph' : validElement = (element.html !== '' && element.html != null); break;
+              }
             }
+            return noElementSelected || validElement;
+          }
 
             function createEmptyElement(type,orderNo){
                 return {
