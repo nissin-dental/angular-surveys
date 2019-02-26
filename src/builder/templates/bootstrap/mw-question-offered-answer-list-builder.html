@@ -20,7 +20,7 @@
               popover-placement="top">
         <i class="fa fa-times"></i>
       </button>
-      <textarea type="text" ng-model="answer.explanation" ng-if="ctrl.question.type=='radio'"
+      <textarea type="text" ng-model="answer.explanation" ng-if="ctrl.question.type=='radio' || ctrl.question.type == 'checkbox'"
              class="form-control offered-answer-explanation" placeholder="{{'target.mwForm.question.comment-given-once-answered'|translate}}"
              ng-readonly="ctrl.readOnly"></textarea>
       <div class="checkbox">
