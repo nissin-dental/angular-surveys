@@ -407,20 +407,16 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
       bindToController: true,
       controller: ["$timeout", "FormQuestionId", "_", "IScrollEvents", "$rootScope", function ($timeout, FormQuestionId, _, IScrollEvents, $rootScope) {
         var ctrl = this;
-        ctrl.explanation = null;
+        ctrl.explanations = [];
         // Put initialization logic inside `$onInit()`
         // to make sure bindings have been initialized.
         this.$onInit = function () {
           ctrl.id = FormQuestionId.next();
-          if (ctrl.questionResponse.selectedAnswer != null) {
-            var question = _.find(ctrl.question.offeredAnswers, {id: ctrl.questionResponse.selectedAnswer});
-            if (question != null) {
-              ctrl.explanation = question.explanation != '' && question.explanation != null ? question.explanation : null;
-            }
-          }
           if (ctrl.question.type == 'radio') {
             if (!ctrl.questionResponse.selectedAnswer) {
               ctrl.questionResponse.selectedAnswer = null;
+            } else {
+              ctrl.updateExplanation(_.find(ctrl.question.offeredAnswers, {id: ctrl.questionResponse.selectedAnswer}));
             }
             if (ctrl.questionResponse.other) {
               ctrl.isOtherAnswer = true;
@@ -429,6 +425,9 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
           } else if (ctrl.question.type == 'checkbox') {
             if (ctrl.questionResponse.selectedAnswers && ctrl.questionResponse.selectedAnswers.length) {
               ctrl.selectedAnswer = true;
+              ctrl.questionResponse.selectedAnswers.forEach(function (answer) {
+                ctrl.updateExplanation({id: answer});
+              })
             } else {
               ctrl.questionResponse.selectedAnswers = [];
             }
@@ -476,6 +475,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
 
         ctrl.selectedAnswerChanged = function () {
           delete ctrl.questionResponse.other;
+          ctrl.explanations = [];
           ctrl.isOtherAnswer = false;
           ctrl.answerChanged();
 
@@ -499,10 +499,13 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
         ctrl.toggleSelectedAnswer = function (answer) {
           if (ctrl.questionResponse.selectedAnswers.indexOf(answer.id) === -1) {
             ctrl.questionResponse.selectedAnswers.push(answer.id);
+            ctrl.explanations[answer.id] = true;
           } else {
             ctrl.questionResponse.selectedAnswers.splice(ctrl.questionResponse.selectedAnswers.indexOf(answer.id), 1);
+            ctrl.explanations[answer.id] = false;
           }
           ctrl.selectedAnswer = ctrl.questionResponse.selectedAnswers.length || ctrl.isOtherAnswer ? true : null;
+          $rootScope.$emit(IScrollEvents.REFRESH);
 
           ctrl.answerChanged();
         };
@@ -514,8 +517,10 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
         };
 
         ctrl.updateExplanation = function (answer) {
-          ctrl.explanation = answer != null && answer.explanation != '' && answer.explanation != null ? answer.explanation : null;
-          $rootScope.$emit(IScrollEvents.REFRESH);
+          if (answer != null) {
+            ctrl.explanations[answer.id] = !ctrl.explanations[answer.id];
+            $rootScope.$emit(IScrollEvents.REFRESH);
+          }
         };
 
         // Prior to v1.5, we need to call `$onInit()` manually.
