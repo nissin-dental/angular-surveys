@@ -247,12 +247,11 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
                 ctrl.$onInit();
             }
 
-
-            $(document).on('click', function(element) {
+            var handleClickDocument = function(element) {
               if (ctrl.activeElement != null && ignoreCloseEdit === false) {
                 var targetElement = element.target;
                 var elementClickedOutsideEdit = targetElement.closest('.mw-form-page-element-builder.active') == null;
-                  if (elementClickedOutsideEdit === true) {
+                if (elementClickedOutsideEdit === true) {
                   if (validateOpenElement() === true) {
                     ctrl.activeElement=null;
                     $timeout(function() {
@@ -265,11 +264,12 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
               } else {
                 ignoreCloseEdit = false;
               }
-            });
+            };
 
+            $(document).on('click', handleClickDocument);
 
             ctrl.$onDestroy = function() {
-              $(document).off('click');
+              $(document).off('click', handleClickDocument);
             };
 
         },
