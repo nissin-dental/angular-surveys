@@ -29,7 +29,8 @@ angular.module('mwFormBuilder').directive('mwFormPageElementBuilder', function (
               id: mwFormUuid.get(),
               text: null,
               type: null,
-              required: true
+              required: true,
+              showCorrectAnswers: true,
             };
           }
         } else if (ctrl.pageElement.type == 'image') {

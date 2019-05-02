@@ -37,6 +37,9 @@
             <label>
               <input type="checkbox" ng-model="ctrl.question.required" ng-disabled="ctrl.readOnly"><span>{{'target.mwForm.questions.required' | translate}}</span>
             </label>
+            <label ng-if="ctrl.question.type != null && ctrl.question.type != 'textarea'">
+              <input type="checkbox" ng-model="ctrl.question.showCorrectAnswers" ng-disabled="ctrl.readOnly"><span>{{'target.mwForm.questions.show-correct-answers' | translate}}</span>
+            </label>
           </div>
         </div>
       </div>
