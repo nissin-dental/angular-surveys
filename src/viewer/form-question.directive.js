@@ -93,7 +93,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
         };
 
         ctrl.validateQuestion = function() {
-          if (ctrl.questionResponse.selectedAnswer != null || (ctrl.questionResponse.selectedAnswers != null && ctrl.questionResponse.selectedAnswers.length > 0)) {
+          if (ctrl.questionResponse.selectedAnswers != null && ctrl.questionResponse.selectedAnswers.length > 0) {
             ctrl.validated = true;
             switch (ctrl.question.type) {
               case 'radio':

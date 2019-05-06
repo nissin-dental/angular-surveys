@@ -1172,7 +1172,6 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 ctrl.$onInit();
             }
 
-
             var handleClickDocument = function(element) {
               if (ctrl.activeElement != null && ignoreCloseEdit === false) {
                 var targetElement = element.target;
@@ -1193,7 +1192,6 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
             };
 
             $(document).on('click', handleClickDocument);
-
 
             ctrl.$onDestroy = function() {
               $(document).off('click', handleClickDocument);
