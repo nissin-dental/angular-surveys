@@ -13,11 +13,21 @@
         </div>
         <div ng-switch-when="radio">
             <div class="radio" ng-repeat="answer in ctrl.question.offeredAnswers">
-                <label>
-                    <input type="radio" ng-model="ctrl.questionResponse.selectedAnswer" ng-value="answer.id" name="answer-for-question-{{ctrl.question.id}}" ng-change="ctrl.selectedAnswerChanged(); ctrl.updateExplanation(answer)" ng-required="ctrl.question.required &&!ctrl.isOtherAnswer" ng-disabled="ctrl.readOnly">
+                <label ng-class="{
+                'incorrect-answer-text' : !answer.correctAnswer && ctrl.validated === true && ctrl.questionResponse.selectedAnswer === answer.id && ctrl.question.showCorrectAnswers === true,
+                'correct-answer-text' : answer.correctAnswer && ctrl.validated === true && ctrl.questionResponse.selectedAnswer === answer.id && ctrl.question.showCorrectAnswers === true}">
+                    <input
+                            type="radio"
+                            ng-model="ctrl.questionResponse.selectedAnswer"
+                            ng-value="answer.id"
+                            name="answer-for-question-{{ctrl.question.id}}"
+                            ng-change="ctrl.selectedAnswerChanged(); ctrl.updateExplanation(answer)"
+                            ng-required="ctrl.question.required &&!ctrl.isOtherAnswer" ng-disabled="ctrl.readOnly">
                     {{::ctrl.print(answer.value)}}
                 </label>
-                <div class="given-answer-explanation" ng-if="ctrl.explanations[answer.id] == true && answer.explanation != ''" ng-readonly="true">{{answer.explanation}}</div>
+                <div class="given-answer-explanation"
+                     ng-if="ctrl.explanations[answer.id] == true && answer.explanation != '' && ctrl.validated === true"
+                     ng-readonly="true">{{answer.explanation}}</div>
             </div>
             <div class="radio" ng-if="ctrl.question.otherAnswer">
                 <label>
@@ -32,11 +42,15 @@
 
         <div ng-switch-when="checkbox">
             <div class="checkbox" ng-repeat="answer in ::ctrl.question.offeredAnswers">
-                <label>
+                <label ng-class="{
+                'incorrect-answer-text' : !answer.correctAnswer && ctrl.validated === true && ctrl.questionResponse.selectedAnswers.indexOf(answer.id) != -1 && ctrl.question.showCorrectAnswers === true,
+                'correct-answer-text' : answer.correctAnswer && ctrl.validated === true && ctrl.questionResponse.selectedAnswers.indexOf(answer.id) != -1 && ctrl.question.showCorrectAnswers === true}">
                     <input type="checkbox" name="answer-for-question-{{ctrl.question.id}}" ng-checked="ctrl.questionResponse.selectedAnswers.indexOf(answer.id) != -1" ng-click="ctrl.toggleSelectedAnswer(answer)" ng-disabled="ctrl.readOnly">
                     {{::ctrl.print(answer.value)}}
                 </label>
-                <div class="given-answer-explanation" ng-if="ctrl.explanations[answer.id] == true && answer.explanation != ''" ng-readonly="true">{{answer.explanation}}</div>
+                <div class="given-answer-explanation"
+                     ng-if="ctrl.explanations[answer.id] == true && answer.explanation != '' && ctrl.validated === true"
+                     ng-readonly="true">{{answer.explanation}}</div>
             </div>
             <div class="checkbox"  ng-if="ctrl.question.otherAnswer">
                 <label>
@@ -130,6 +144,13 @@
         </div>
 
     </div>
-
+    <div class="button-group">
+        <div class="correct-answer-container">
+            <div class="incorrect-answer-text" ng-if="ctrl.validated && ctrl.allAnswersCorrect === false"><span translate="target.mwForm.question.answers-incorrect">Incorrect</span></div>
+            <div class="correct-answer-text" ng-if="ctrl.validated && ctrl.allAnswersCorrect === true"><span translate="target.mwForm.question.answers-correct">Correct</span></div>
+        </div>
+        <button ng-if="ctrl.question.type != 'textarea' && ctrl.question.showCorrectAnswers === true" class="moog-button large mw-validate-button" ng-click="ctrl.validateQuestion()"> <span translate="target.mwForm.buttons.validate">Validate</span></button>
+    </div>
+    <div class="mw-question-divider"></div>
 </div>
 
