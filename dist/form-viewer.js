@@ -479,9 +479,6 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
           switch (ctrl.question.type) {
             case 'radio':
               var selectedAnswer = _.find(ctrl.question.offeredAnswers, {id: ctrl.questionResponse.selectedAnswer});
-              /* eslint-disable no-console */
-              console.log('selected', selectedAnswer);
-              console.log('selected', selectedAnswer != null && selectedAnswer.correctAnswer);
               ctrl.allAnswersCorrect = selectedAnswer != null && selectedAnswer.correctAnswer;
               break;
             case 'checkbox':
