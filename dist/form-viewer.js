@@ -475,20 +475,19 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
         };
 
         ctrl.validateQuestion = function() {
-          if (ctrl.questionResponse.selectedAnswers != null && ctrl.questionResponse.selectedAnswers.length > 0) {
-            ctrl.validated = true;
-            switch (ctrl.question.type) {
-              case 'radio':
-                ctrl.allAnswersCorrect = _.find(ctrl.question.offeredAnswers, {id: ctrl.questionResponse.selectedAnswer}).correctAnswer;
-                break;
-              case 'checkbox':
-                var correctAnswerIds = _.map(_.filter(ctrl.question.offeredAnswers, function (answer) {
-                  return answer.correctAnswer === true
-                }), 'id');
-                var givenAnswerIds = ctrl.questionResponse.selectedAnswers;
-                ctrl.allAnswersCorrect = _.isEqual(correctAnswerIds.sort(), givenAnswerIds.sort());
-                break;
-            }
+          ctrl.validated = true;
+          switch (ctrl.question.type) {
+            case 'radio':
+              var selectedAnswer = _.find(ctrl.question.offeredAnswers, {id: ctrl.questionResponse.selectedAnswer});
+              ctrl.allAnswersCorrect = selectedAnswer != null && selectedAnswer.correctAnswer;
+              break;
+            case 'checkbox':
+              var correctAnswerIds = _.map(_.filter(ctrl.question.offeredAnswers, function (answer) {
+                return answer.correctAnswer === true
+              }), 'id');
+              var givenAnswerIds = ctrl.questionResponse.selectedAnswers;
+              ctrl.allAnswersCorrect = _.isEqual(correctAnswerIds.sort(), givenAnswerIds.sort());
+              break;
           }
         };
 
