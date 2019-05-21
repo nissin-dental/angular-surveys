@@ -208,6 +208,8 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
           checkbox: {}
         };
 
+        ctrl.hasCorrectAnswer = false;
+        hasCorrectAnswer();
         ctrl.isNewAnswer = {};
 
         sortAnswersByOrderNo();
@@ -233,6 +235,9 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
         }
       };
 
+      function hasCorrectAnswer () {
+        ctrl.hasCorrectAnswer = _.filter(ctrl.question.offeredAnswers, {correctAnswer: true}).length > 0;
+      }
 
       function updateAnswersOrderNo() {
         if (ctrl.question.offeredAnswers) {
@@ -268,6 +273,12 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
         if(focus == null || focus === true) {
           ctrl.isNewAnswer[answer.id] = true;
         }
+
+        if (ctrl.question.offeredAnswers.length === 0) {
+          answer.correctAnswer = true;
+          ctrl.hasCorrectAnswer = true;
+        }
+
         ctrl.question.offeredAnswers.push(answer);
       };
 
@@ -275,6 +286,7 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
         var index = ctrl.question.offeredAnswers.indexOf(answer);
         if (index != -1) {
           ctrl.question.offeredAnswers.splice(index, 1);
+          hasCorrectAnswer();
         }
       };
 
@@ -298,10 +310,13 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
       ctrl.updateMaxCorrectAnswers = function(answer) {
         if(ctrl.question.type === 'radio') {
           ctrl.question.offeredAnswers.forEach(function(offeredAnswer) {
-            if(offeredAnswer.id != answer.id) {
+            if(offeredAnswer.id == answer.id) {
+              offeredAnswer.correctAnswer = true;
+            } else {
               offeredAnswer.correctAnswer = false;
             }
           });
+          hasCorrectAnswer();
         }
       };
 
@@ -659,12 +674,15 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
             }
 
             ctrl.save=function(){
-                ctrl.formSubmitted=true;
-                if(ctrl.form.$valid){
-                if(ctrl.question.type === 'radio' || ctrl.question.type === 'checkbox') {
-                  if (ctrl.question.offeredAnswers.length > 1) {
-                      ctrl.onReady();
-                    }
+              ctrl.formSubmitted=true;
+              if(ctrl.form && ctrl.form.$valid){
+                if(ctrl.question.type === 'checkbox' || ctrl.question.type === 'radio') {
+
+                  if (ctrl.question.type === 'checkbox' && ctrl.question.offeredAnswers.length > 1) {
+                    ctrl.onReady();
+                  } else if (ctrl.question.type === 'radio' && ctrl.question.offeredAnswers.length > 1 && _.filter(ctrl.question.offeredAnswers, {correctAnswer: true}).length > 0) {
+                    ctrl.onReady();
+                  }
                 } else {
                   ctrl.onReady();
                 }
@@ -1132,12 +1150,17 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                     element.offeredAnswers.forEach(function(answer) {
                       validElement = validElement === false ? false : (answer.text != null && answer.text !== '') || (answer.value != null && answer.value !== '');
                     });
+
+                    if(element.type === 'radio' && validElement === true) {
+                      validElement = _.filter(element.offeredAnswers, {correctAnswer: true}).length > 0;
+                    }
                   }
                   break;
                 case 'image' : validElement = element.src != null; break;
                 case 'paragraph' : validElement = (element.html !== '' && element.html != null); break;
               }
             }
+
             return noElementSelected || validElement;
           }
 

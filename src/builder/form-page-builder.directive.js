@@ -207,12 +207,17 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
                     element.offeredAnswers.forEach(function(answer) {
                       validElement = validElement === false ? false : (answer.text != null && answer.text !== '') || (answer.value != null && answer.value !== '');
                     });
+
+                    if(element.type === 'radio' && validElement === true) {
+                      validElement = _.filter(element.offeredAnswers, {correctAnswer: true}).length > 0;
+                    }
                   }
                   break;
                 case 'image' : validElement = element.src != null; break;
                 case 'paragraph' : validElement = (element.html !== '' && element.html != null); break;
               }
             }
+
             return noElementSelected || validElement;
           }
 
