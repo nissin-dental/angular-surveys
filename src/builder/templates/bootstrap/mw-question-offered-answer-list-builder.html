@@ -25,7 +25,10 @@
              ng-readonly="ctrl.readOnly"></textarea>
       <div class="checkbox">
         <label>
-          <input class="correct-answer-checkbox" ng-change="ctrl.updateMaxCorrectAnswers(answer)" type="checkbox" ng-model="answer.correctAnswer"><span>{{'target.mwForm.questions.correct-answer' | translate}}</span>
+
+          <input ng-if="ctrl.question.type=='radio'" class="correct-answer-checkbox" ng-change="ctrl.updateMaxCorrectAnswers(answer)" type="radio" ng-model="answer.correctAnswer" ng-value="true">
+          <input ng-if="ctrl.question.type=='checkbox'" class="correct-answer-checkbox" ng-change="ctrl.updateMaxCorrectAnswers(answer)" type="checkbox" ng-model="answer.correctAnswer">
+          <span>{{'target.mwForm.questions.correct-answer' | translate}}</span>
         </label>
       </div>
     </div>
@@ -33,6 +36,9 @@
   <div class="mw-question-offered-answer add-new-answer-widget" ng-if="!ctrl.readOnly">
     <div ng-if="(ctrl.question.type == 'radio' || ctrl.question.type == 'checkbox') && ctrl.question.offeredAnswers.length < 2" class="min-answers-text">
       {{'target.mwForm.questions.min-answers' | translate}}
+    </div>
+    <div ng-if="ctrl.question.type == 'radio' && ctrl.hasCorrectAnswer === false" class="min-answers-text">
+      {{'target.mwForm.questions.correct-answer-required' | translate}}
     </div>
     <div class="drag-handle">
     </div>

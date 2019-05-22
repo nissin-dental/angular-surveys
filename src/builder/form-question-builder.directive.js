@@ -66,12 +66,15 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
             }
 
             ctrl.save=function(){
-                ctrl.formSubmitted=true;
-                if(ctrl.form.$valid){
-                if(ctrl.question.type === 'radio' || ctrl.question.type === 'checkbox') {
-                  if (ctrl.question.offeredAnswers.length > 1) {
-                      ctrl.onReady();
-                    }
+              ctrl.formSubmitted=true;
+              if(ctrl.form && ctrl.form.$valid){
+                if(ctrl.question.type === 'checkbox' || ctrl.question.type === 'radio') {
+
+                  if (ctrl.question.type === 'checkbox' && ctrl.question.offeredAnswers.length > 1) {
+                    ctrl.onReady();
+                  } else if (ctrl.question.type === 'radio' && ctrl.question.offeredAnswers.length > 1 && _.filter(ctrl.question.offeredAnswers, {correctAnswer: true}).length > 0) {
+                    ctrl.onReady();
+                  }
                 } else {
                   ctrl.onReady();
                 }

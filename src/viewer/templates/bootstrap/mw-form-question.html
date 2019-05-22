@@ -19,6 +19,7 @@
                     <input
                             type="radio"
                             ng-model="ctrl.questionResponse.selectedAnswer"
+                            class="circle-radio"
                             ng-value="answer.id"
                             name="answer-for-question-{{ctrl.question.id}}"
                             ng-change="ctrl.selectedAnswerChanged(); ctrl.updateExplanation(answer)"
