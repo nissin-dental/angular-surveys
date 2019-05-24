@@ -46,7 +46,7 @@
                 <label ng-class="{
                 'incorrect-answer-text' : !answer.correctAnswer && ctrl.validated === true && ctrl.questionResponse.selectedAnswers.indexOf(answer.id) != -1 && ctrl.question.showCorrectAnswers === true,
                 'correct-answer-text' : answer.correctAnswer && ctrl.validated === true && ctrl.questionResponse.selectedAnswers.indexOf(answer.id) != -1 && ctrl.question.showCorrectAnswers === true}">
-                    <input type="checkbox" name="answer-for-question-{{ctrl.question.id}}" ng-checked="ctrl.questionResponse.selectedAnswers.indexOf(answer.id) != -1" ng-click="ctrl.toggleSelectedAnswer(answer)" ng-disabled="ctrl.readOnly">
+                    <input type="checkbox" class="q-and-a-checkbox" name="answer-for-question-{{ctrl.question.id}}" ng-checked="ctrl.questionResponse.selectedAnswers.indexOf(answer.id) != -1" ng-click="ctrl.toggleSelectedAnswer(answer)" ng-disabled="ctrl.readOnly">
                     {{::ctrl.print(answer.value)}}
                 </label>
                 <div class="given-answer-explanation"
