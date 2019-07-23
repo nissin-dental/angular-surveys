@@ -1,6 +1,6 @@
 {
   "name": "angular-surveys",
-  "version": "4.8.1",
+  "version": "4.9.0",
   "description": "Angular survey/form builder and viewer inspired by Google Forms",
   "main": "gulpfile.js",
   "devDependencies": {
