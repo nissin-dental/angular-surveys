@@ -29,6 +29,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
         // Put initialization logic inside `$onInit()`
         // to make sure bindings have been initialized.
         this.$onInit = function () {
+          ctrl.validated = false;
           ctrl.id = FormQuestionId.next();
           if (ctrl.question.type == 'radio') {
             if (!ctrl.questionResponse.selectedAnswer) {
@@ -91,6 +92,23 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
           ctrl.initialized = true;
         };
 
+        ctrl.validateQuestion = function() {
+          ctrl.validated = true;
+          switch (ctrl.question.type) {
+            case 'radio':
+              var selectedAnswer = _.find(ctrl.question.offeredAnswers, {id: ctrl.questionResponse.selectedAnswer});
+              ctrl.allAnswersCorrect = selectedAnswer != null && selectedAnswer.correctAnswer;
+              break;
+            case 'checkbox':
+              var correctAnswerIds = _.map(_.filter(ctrl.question.offeredAnswers, function (answer) {
+                return answer.correctAnswer === true
+              }), 'id');
+              var givenAnswerIds = ctrl.questionResponse.selectedAnswers;
+              ctrl.allAnswersCorrect = _.isEqual(correctAnswerIds.sort(), givenAnswerIds.sort());
+              break;
+          }
+        };
+
         ctrl.selectedAnswerChanged = function () {
           delete ctrl.questionResponse.other;
           ctrl.explanations = [];
@@ -132,6 +150,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
           if (ctrl.onResponseChanged) {
             ctrl.onResponseChanged();
           }
+          ctrl.validated = false;
         };
 
         ctrl.updateExplanation = function (answer) {
