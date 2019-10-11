@@ -971,7 +971,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 sortElementsByOrderNo();
 
                 ctrl.sortableConfig = {
-                    disabled: ctrl.readOnly,
+                    disabled: true || ctrl.readOnly,
                     ghostClass: "beingDragged",
                     group: "survey",
                     handle: ".inactive",
