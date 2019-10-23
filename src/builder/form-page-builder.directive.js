@@ -244,6 +244,9 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
                 ctrl.hoverEdit = false;
             };
 
+            ctrl.ignoreClose = function() {
+              ignoreCloseEdit = true;
+            };
 
             ctrl.updateElementsOrderNo = updateElementsOrderNo;
 
@@ -254,22 +257,28 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
             }
 
             var handleClickDocument = function(element) {
-              if (ctrl.activeElement != null && ignoreCloseEdit === false) {
+              $rootScope.$applyAsync(function() {
+
                 var targetElement = element.target;
-                var elementClickedOutsideEdit = targetElement.closest('.mw-form-page-element-builder.active') == null;
-                if (elementClickedOutsideEdit === true) {
-                  if (validateOpenElement() === true) {
-                    ctrl.activeElement=null;
-                    $timeout(function() {
-                      $rootScope.$emit(IScrollEvents.REFRESH);
-                    },0);
-                  } else {
-                    $rootScope.$emit('validateForm');
-                  }
+                if (targetElement.hasAttribute('prevent-click')) {
+                  return;
                 }
-              } else {
-                ignoreCloseEdit = false;
-              }
+                if (ctrl.activeElement != null && ignoreCloseEdit === false) {
+                  var elementClickedOutsideEdit = targetElement.closest('.mw-form-page-element-builder.active') == null;
+                  if (elementClickedOutsideEdit === true) {
+                    if (validateOpenElement() === true) {
+                      ctrl.activeElement=null;
+                      $timeout(function() {
+                        $rootScope.$emit(IScrollEvents.REFRESH);
+                      },0);
+                    } else {
+                      $rootScope.$emit('validateForm');
+                    }
+                  }
+                } else {
+                  ignoreCloseEdit = false;
+                }
+              })
             };
 
             $(document).on('click', handleClickDocument);

@@ -27,8 +27,10 @@
                     {{::ctrl.print(answer.value)}}
                 </label>
                 <div class="given-answer-explanation"
-                     ng-if="ctrl.explanations[answer.id] == true && answer.explanation != '' && ctrl.validated === true"
-                     ng-readonly="true">{{answer.explanation}}</div>
+                     ng-if="ctrl.explanations[answer.id] == true  && (answer.explanation != ''|| answer.image) && ctrl.validated === true"
+                     ng-readonly="true">{{answer.explanation}}
+                  <img ng-if="answer.image" ng-src="{{answer.image}}"/>
+                </div>
             </div>
             <div class="radio" ng-if="ctrl.question.otherAnswer">
                 <label>
@@ -50,8 +52,10 @@
                     {{::ctrl.print(answer.value)}}
                 </label>
                 <div class="given-answer-explanation"
-                     ng-if="ctrl.explanations[answer.id] == true && answer.explanation != '' && ctrl.validated === true"
-                     ng-readonly="true">{{answer.explanation}}</div>
+                     ng-if="ctrl.explanations[answer.id] == true && (answer.explanation != ''|| answer.image) && ctrl.validated === true"
+                     ng-readonly="true">{{answer.explanation}}
+                  <img ng-if="answer.image" ng-src="{{answer.image}}"/>
+                </div>
             </div>
             <div class="checkbox"  ng-if="ctrl.question.otherAnswer">
                 <label>

@@ -9,12 +9,13 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
       formObject: '=',
       readOnly: '=?',
       options: '=?',
-      disableOtherAnswer: '=?'
+      disableOtherAnswer: '=?',
+      uploadUrl: '=',
     },
     templateUrl: 'mw-question-offered-answer-list-builder.html',
     controllerAs: 'ctrl',
     bindToController: true,
-    controller: function (FormQuestionBuilderId, mwFormUuid) {
+    controller: function (FormQuestionBuilderId, mwFormUuid, Upload, $q, $rootScope) {
       var ctrl = this;
       // Put initialization logic inside `$onInit()`
       // to make sure bindings have been initialized.
@@ -136,6 +137,30 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
         }
       };
 
+      ctrl.selectImageButtonClicked = function (answer, image) {
+        if (image) {
+          var promises = [];
+          promises.push(Upload.upload({
+            url: ctrl.uploadUrl,
+            method: 'POST',
+            data: {
+              file: image,
+              maxWidth: 876,
+            },
+          })
+            .then(function (response) {
+              answer.image = response.data.filePath;
+            })
+            .catch(function (error) {
+              return $q.reject(error);
+            }));
+          return $q.all(promises);
+        } else {
+          $rootScope.$emit('validateForm');
+          return $q.reject('no images or uploadurl defined');
+        }
+      };
+
       // Prior to v1.5, we need to call `$onInit()` manually.
       // (Bindings will always be pre-assigned in these versions.)
       if (angular.version.major === 1 && angular.version.minor < 5) {
@@ -145,6 +170,7 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
     link: function (scope, ele, attrs, formQuestionBuilderCtrl) {
       var ctrl = scope.ctrl;
       ctrl.possiblePageFlow = formQuestionBuilderCtrl.possiblePageFlow;
+      ctrl.ignoreClose = formQuestionBuilderCtrl.ignoreClose;
     }
   };
 });

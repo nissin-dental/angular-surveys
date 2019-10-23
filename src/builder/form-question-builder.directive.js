@@ -19,7 +19,8 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
             formObject: '=',
             onReady: '&',
             isPreview: '=?',
-            readOnly: '=?'
+            readOnly: '=?',
+            uploadUrl:'='
         },
         templateUrl: 'mw-form-question-builder.html',
         controllerAs: 'ctrl',
@@ -150,6 +151,7 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
             var ctrl = scope.ctrl;
             ctrl.possiblePageFlow = formPageElementBuilder.possiblePageFlow;
             ctrl.options = formPageElementBuilder.options;
+            ctrl.ignoreClose = formPageElementBuilder.ignoreClose;
         }
     };
 });

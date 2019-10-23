@@ -113,6 +113,7 @@ angular.module('mwFormBuilder').directive('mwFormPageElementBuilder', function (
 
       ctrl.options = pageBuilderCtrl.options;
       ctrl.onImageSelection = pageBuilderCtrl.onImageSelection;
+      ctrl.ignoreClose = pageBuilderCtrl.ignoreClose;
     }
   };
 });
