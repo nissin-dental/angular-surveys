@@ -193,12 +193,13 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
       formObject: '=',
       readOnly: '=?',
       options: '=?',
-      disableOtherAnswer: '=?'
+      disableOtherAnswer: '=?',
+      uploadUrl: '=',
     },
     templateUrl: 'mw-question-offered-answer-list-builder.html',
     controllerAs: 'ctrl',
     bindToController: true,
-    controller: ["FormQuestionBuilderId", "mwFormUuid", function (FormQuestionBuilderId, mwFormUuid) {
+    controller: ["FormQuestionBuilderId", "mwFormUuid", "Upload", "$q", "$rootScope", function (FormQuestionBuilderId, mwFormUuid, Upload, $q, $rootScope) {
       var ctrl = this;
       // Put initialization logic inside `$onInit()`
       // to make sure bindings have been initialized.
@@ -320,6 +321,30 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
         }
       };
 
+      ctrl.selectImageButtonClicked = function (answer, image) {
+        if (image) {
+          var promises = [];
+          promises.push(Upload.upload({
+            url: ctrl.uploadUrl,
+            method: 'POST',
+            data: {
+              file: image,
+              maxWidth: 876,
+            },
+          })
+            .then(function (response) {
+              answer.image = response.data.filePath;
+            })
+            .catch(function (error) {
+              return $q.reject(error);
+            }));
+          return $q.all(promises);
+        } else {
+          $rootScope.$emit('validateForm');
+          return $q.reject('no images or uploadurl defined');
+        }
+      };
+
       // Prior to v1.5, we need to call `$onInit()` manually.
       // (Bindings will always be pre-assigned in these versions.)
       if (angular.version.major === 1 && angular.version.minor < 5) {
@@ -329,6 +354,7 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
     link: function (scope, ele, attrs, formQuestionBuilderCtrl) {
       var ctrl = scope.ctrl;
       ctrl.possiblePageFlow = formQuestionBuilderCtrl.possiblePageFlow;
+      ctrl.ignoreClose = formQuestionBuilderCtrl.ignoreClose;
     }
   };
 });
@@ -627,7 +653,8 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
             formObject: '=',
             onReady: '&',
             isPreview: '=?',
-            readOnly: '=?'
+            readOnly: '=?',
+            uploadUrl:'='
         },
         templateUrl: 'mw-form-question-builder.html',
         controllerAs: 'ctrl',
@@ -758,6 +785,7 @@ angular.module('mwFormBuilder').factory("FormQuestionBuilderId", function(){
             var ctrl = scope.ctrl;
             ctrl.possiblePageFlow = formPageElementBuilder.possiblePageFlow;
             ctrl.options = formPageElementBuilder.options;
+            ctrl.ignoreClose = formPageElementBuilder.ignoreClose;
         }
     };
 });
@@ -937,6 +965,7 @@ angular.module('mwFormBuilder').directive('mwFormPageElementBuilder', function (
 
       ctrl.options = pageBuilderCtrl.options;
       ctrl.onImageSelection = pageBuilderCtrl.onImageSelection;
+      ctrl.ignoreClose = pageBuilderCtrl.ignoreClose;
     }
   };
 });
@@ -971,6 +1000,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 sortElementsByOrderNo();
 
                 ctrl.sortableConfig = {
+                    // Always disable scrolling
                     disabled: true || ctrl.readOnly,
                     ghostClass: "beingDragged",
                     group: "survey",
@@ -1186,6 +1216,9 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 ctrl.hoverEdit = false;
             };
 
+            ctrl.ignoreClose = function() {
+              ignoreCloseEdit = true;
+            };
 
             ctrl.updateElementsOrderNo = updateElementsOrderNo;
 
@@ -1196,22 +1229,28 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
             }
 
             var handleClickDocument = function(element) {
-              if (ctrl.activeElement != null && ignoreCloseEdit === false) {
+              $rootScope.$applyAsync(function() {
+
                 var targetElement = element.target;
-                var elementClickedOutsideEdit = targetElement.closest('.mw-form-page-element-builder.active') == null;
-                if (elementClickedOutsideEdit === true) {
-                  if (validateOpenElement() === true) {
-                    ctrl.activeElement=null;
-                    $timeout(function() {
-                      $rootScope.$emit(IScrollEvents.REFRESH);
-                    },0);
-                  } else {
-                    $rootScope.$emit('validateForm');
-                  }
+                if (targetElement.hasAttribute('prevent-click')) {
+                  return;
                 }
-              } else {
-                ignoreCloseEdit = false;
-              }
+                if (ctrl.activeElement != null && ignoreCloseEdit === false) {
+                  var elementClickedOutsideEdit = targetElement.closest('.mw-form-page-element-builder.active') == null;
+                  if (elementClickedOutsideEdit === true) {
+                    if (validateOpenElement() === true) {
+                      ctrl.activeElement=null;
+                      $timeout(function() {
+                        $rootScope.$emit(IScrollEvents.REFRESH);
+                      },0);
+                    } else {
+                      $rootScope.$emit('validateForm');
+                    }
+                  }
+                } else {
+                  ignoreCloseEdit = false;
+                }
+              })
             };
 
             $(document).on('click', handleClickDocument);

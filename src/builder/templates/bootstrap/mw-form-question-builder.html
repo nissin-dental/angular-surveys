@@ -53,7 +53,8 @@
           </div>
           <div ng-switch-when="radio">
             <mw-question-offered-answer-list-builder question="ctrl.question" form-object="ctrl.formObject"
-                                                     read-only="ctrl.readOnly"></mw-question-offered-answer-list-builder>
+                                                     read-only="ctrl.readOnly"
+                                                     upload-url="ctrl.uploadUrl"></mw-question-offered-answer-list-builder>
           </div>
           <div ng-switch-when="select">
             <mw-question-offered-answer-list-builder question="ctrl.question" form-object="ctrl.formObject"
@@ -62,7 +63,8 @@
           </div>
           <div ng-switch-when="checkbox">
             <mw-question-offered-answer-list-builder question="ctrl.question" form-object="ctrl.formObject"
-                                                     read-only="ctrl.readOnly"></mw-question-offered-answer-list-builder>
+                                                     read-only="ctrl.readOnly"
+                                                     upload-url="ctrl.uploadUrl"></mw-question-offered-answer-list-builder>
           </div>
         </div>
         <div class="col-sm-12" ng-if="ctrl.question.type=='grid'">
@@ -112,7 +114,7 @@
         </div>
         <div ng-switch-when="radio">
           <div class="radio" ng-repeat="answer in ctrl.question.offeredAnswers">
-            <label>
+            <label prevent-click>
               <input type="radio">
               {{answer.value}}
             </label>
@@ -128,7 +130,7 @@
         <div ng-switch-when="checkbox">
           <div class="checkbox" ng-repeat="answer in ctrl.question.offeredAnswers">
             <label>
-              <input type="checkbox">
+              <input type="checkbox" prevent-click>
               {{answer.value}}
             </label>
           </div>
