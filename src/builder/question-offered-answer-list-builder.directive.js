@@ -149,7 +149,8 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
             },
           })
             .then(function (response) {
-              answer.image = response.data.filePath;
+              answer.src = response.data.filePath;
+              answer.image = response.data.fileName;
             })
             .catch(function (error) {
               return $q.reject(error);

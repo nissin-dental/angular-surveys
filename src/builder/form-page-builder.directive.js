@@ -69,7 +69,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
 
 
 
-            ctrl.addElement = function(type, src){
+            ctrl.addElement = function(type, src, filename){
               if(!type){
 
                     type=mwFormBuilderOptions.elementTypes[0];
@@ -77,7 +77,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
                 var element = createEmptyElement(type, ctrl.formPage.elements.length + 1);
 
               if (type === 'image') {
-                element.image = {src : src};
+                element.image = {src : src, image: filename};
               }
               ctrl.activeElement=element;
                 ctrl.formPage.elements.push(element);
@@ -130,9 +130,9 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
               }
             };
 
-            ctrl.addImage = function(src){
+            ctrl.addImage = function(src, filename) {
               if (validateOpenElement() === true) {
-                ctrl.addElement('image', src);
+                ctrl.addElement('image', src, filename);
                 ignoreCloseEdit = true;
               } else {
                 $rootScope.$emit('validateForm');
@@ -182,7 +182,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
                 },
               })
                 .then(function (response) {
-                  ctrl.addImage(response.data.filePath);
+                  ctrl.addImage(response.data.filePath, response.data.fileName);
                 })
                 .catch(function (error) {
                   return $q.reject(error);
