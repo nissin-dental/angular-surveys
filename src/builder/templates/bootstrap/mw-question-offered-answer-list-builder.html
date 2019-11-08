@@ -25,7 +25,7 @@
              ng-readonly="ctrl.readOnly"></textarea>
       <div ng-if="answer.src" class="image-offered-answer">
         <img ng-src="{{answer.src}}" class="offered-answer"/>
-        <button role="button" class="remove-item-button" ng-click="answer.src = null"
+        <button role="button" class="remove-item-button" ng-click="answer.src = answer.image = null"
                 ng-if="!ctrl.readOnly"
                 ng-attr-title="{{'mwForm.buttons.remove' | translate}}"
                 uib-popover="{{'mwForm.buttons.remove' | translate}}" popover-trigger="mouseenter"
