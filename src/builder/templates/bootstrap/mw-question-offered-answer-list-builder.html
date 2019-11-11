@@ -23,9 +23,9 @@
       <textarea type="text" ng-model="answer.explanation" ng-if="ctrl.question.type=='radio' || ctrl.question.type == 'checkbox'"
              class="form-control offered-answer-explanation" placeholder="{{'target.mwForm.question.comment-given-once-answered'|translate}}"
              ng-readonly="ctrl.readOnly"></textarea>
-      <div ng-if="answer.image" class="image-offered-answer">
-        <img ng-src="{{answer.image}}" class="offered-answer"/>
-        <button role="button" class="remove-item-button" ng-click="answer.image = null"
+      <div ng-if="answer.src" class="image-offered-answer">
+        <img ng-src="{{answer.src}}" class="offered-answer"/>
+        <button role="button" class="remove-item-button" ng-click="answer.src = answer.image = null"
                 ng-if="!ctrl.readOnly"
                 ng-attr-title="{{'mwForm.buttons.remove' | translate}}"
                 uib-popover="{{'mwForm.buttons.remove' | translate}}" popover-trigger="mouseenter"
@@ -37,7 +37,7 @@
               ngf-change="ctrl.selectImageButtonClicked(answer, $file)" accept='image/*'
               ng-readonly="ctrl.readOnly"
               ng-click="ctrl.ignoreClose()"
-              ng-if="!answer.image"><span>{{'target.mwForm.questions.add-image' | translate}}</span></button>
+              ng-if="!answer.src"><span>{{'target.mwForm.questions.add-image' | translate}}</span></button>
       <div class="checkbox">
         <label>
 

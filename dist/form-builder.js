@@ -333,7 +333,8 @@ angular.module('mwFormBuilder').directive('mwQuestionOfferedAnswerListBuilder', 
             },
           })
             .then(function (response) {
-              answer.image = response.data.filePath;
+              answer.src = response.data.filePath;
+              answer.image = response.data.fileName;
             })
             .catch(function (error) {
               return $q.reject(error);
@@ -1041,7 +1042,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
 
 
 
-            ctrl.addElement = function(type, src){
+            ctrl.addElement = function(type, src, filename){
               if(!type){
 
                     type=mwFormBuilderOptions.elementTypes[0];
@@ -1049,7 +1050,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 var element = createEmptyElement(type, ctrl.formPage.elements.length + 1);
 
               if (type === 'image') {
-                element.image = {src : src};
+                element.image = {src : src, image: filename};
               }
               ctrl.activeElement=element;
                 ctrl.formPage.elements.push(element);
@@ -1102,9 +1103,9 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
               }
             };
 
-            ctrl.addImage = function(src){
+            ctrl.addImage = function(src, filename) {
               if (validateOpenElement() === true) {
-                ctrl.addElement('image', src);
+                ctrl.addElement('image', src, filename);
                 ignoreCloseEdit = true;
               } else {
                 $rootScope.$emit('validateForm');
@@ -1154,7 +1155,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 },
               })
                 .then(function (response) {
-                  ctrl.addImage(response.data.filePath);
+                  ctrl.addImage(response.data.filePath, response.data.fileName);
                 })
                 .catch(function (error) {
                   return $q.reject(error);
