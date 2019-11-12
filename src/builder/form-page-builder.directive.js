@@ -41,6 +41,10 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
                 };
 
                 ctrl.activeElement = null;
+
+                if (ctrl.formPage.elements.length === 0) {
+                  ctrl.addQuestion();
+                }
             };
 
             ctrl.unfold = function(){
@@ -306,6 +310,10 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', function ($rootSc
 
             ctrl.addPage=function(){
                 formBuilderCtrl.addPageAfter(ctrl.formPage);
+            };
+
+            ctrl.clonePage=function() {
+              formBuilderCtrl.addPageAfter(ctrl.formPage, true);
             };
 
             scope.$watch('ctrl.formPage.elements.length', function(newValue, oldValue){

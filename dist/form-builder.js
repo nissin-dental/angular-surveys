@@ -1014,6 +1014,10 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 };
 
                 ctrl.activeElement = null;
+
+                if (ctrl.formPage.elements.length === 0) {
+                  ctrl.addQuestion();
+                }
             };
 
             ctrl.unfold = function(){
@@ -1281,6 +1285,10 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                 formBuilderCtrl.addPageAfter(ctrl.formPage);
             };
 
+            ctrl.clonePage=function() {
+              formBuilderCtrl.addPageAfter(ctrl.formPage, true);
+            };
+
             scope.$watch('ctrl.formPage.elements.length', function(newValue, oldValue){
                 if(newValue!=oldValue){
                     ctrl.updateElementsOrderNo();
@@ -1392,7 +1400,7 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', ["$rootScope", functi
     templateUrl: 'mw-form-builder.html',
     controllerAs: 'ctrl',
     bindToController: true,
-    controller: ["mwFormUuid", "MW_QUESTION_TYPES", "mwFormBuilderOptions", function (mwFormUuid, MW_QUESTION_TYPES, mwFormBuilderOptions) {
+    controller: ["mwFormUuid", "MW_QUESTION_TYPES", "mwFormBuilderOptions", "mwFormClone", function (mwFormUuid, MW_QUESTION_TYPES, mwFormBuilderOptions, mwFormClone) {
       var ctrl = this;
       // Put initialization logic inside `$onInit()`
       // to make sure bindings have been initialized.
@@ -1463,10 +1471,15 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', ["$rootScope", functi
         ctrl.updatePageFlow();
       }
 
-      ctrl.addPageAfter = function (page) {
+      ctrl.addPageAfter = function (page, clone) {
         var index = ctrl.formData.pages.indexOf(page);
         var newIndex = index + 1;
         var newPage = createEmptyPage(page.number + 1);
+        if (clone) {
+          page.elements.forEach(function(element) {
+            newPage.elements.push(mwFormClone.cloneElement(element));
+          });
+        }
         if (newIndex < ctrl.formData.pages.length) {
           ctrl.formData.pages.splice(newIndex, 0, newPage);
         } else {
