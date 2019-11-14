@@ -15,7 +15,7 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', function ($rootScope)
     templateUrl: 'mw-form-builder.html',
     controllerAs: 'ctrl',
     bindToController: true,
-    controller: function (mwFormUuid, MW_QUESTION_TYPES, mwFormBuilderOptions) {
+    controller: function (mwFormUuid, MW_QUESTION_TYPES, mwFormBuilderOptions, mwFormClone) {
       var ctrl = this;
       // Put initialization logic inside `$onInit()`
       // to make sure bindings have been initialized.
@@ -86,10 +86,15 @@ angular.module('mwFormBuilder').directive('mwFormBuilder', function ($rootScope)
         ctrl.updatePageFlow();
       }
 
-      ctrl.addPageAfter = function (page) {
+      ctrl.addPageAfter = function (page, clone) {
         var index = ctrl.formData.pages.indexOf(page);
         var newIndex = index + 1;
         var newPage = createEmptyPage(page.number + 1);
+        if (clone) {
+          page.elements.forEach(function(element) {
+            newPage.elements.push(mwFormClone.cloneElement(element));
+          });
+        }
         if (newIndex < ctrl.formData.pages.length) {
           ctrl.formData.pages.splice(newIndex, 0, newPage);
         } else {
