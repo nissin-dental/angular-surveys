@@ -2,10 +2,6 @@
   <div class="question-offered-answer-list" ng-sortable="ctrl.offeredAnswersSortableConfig"
        ng-model="ctrl.question.offeredAnswers" role="list">
     <div class="mw-question-offered-answer" ng-repeat="answer in ctrl.question.offeredAnswers" role="listitem">
-      <div class="drag-handle" ng-if="!ctrl.readOnly">
-        <i class="fa fa-arrows-v fa-lg handle-inner"></i>
-
-      </div>
       <div class="option-type-indicator">
         <i ng-if="ctrl.question.type=='radio'" class="fa fa-circle-thin fa-fw"></i>
         <i ng-if="ctrl.question.type=='checkbox'" class="fa fa-square-o fa-fw"></i>
