@@ -23,7 +23,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
       templateUrl: 'mw-form-question.html',
       controllerAs: 'ctrl',
       bindToController: true,
-      controller: function ($timeout, FormQuestionId, _, IScrollEvents, $rootScope) {
+      controller: function ($timeout, FormQuestionId, _, $rootScope) {
         var ctrl = this;
         ctrl.explanations = [];
         // Put initialization logic inside `$onInit()`
@@ -141,7 +141,6 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
             ctrl.explanations[answer.id] = false;
           }
           ctrl.selectedAnswer = ctrl.questionResponse.selectedAnswers.length || ctrl.isOtherAnswer ? true : null;
-          $rootScope.$emit(IScrollEvents.REFRESH);
 
           ctrl.answerChanged();
         };
@@ -156,7 +155,6 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
         ctrl.updateExplanation = function (answer) {
           if (answer != null) {
             ctrl.explanations[answer.id] = !ctrl.explanations[answer.id];
-            $rootScope.$emit(IScrollEvents.REFRESH);
           }
         };
 

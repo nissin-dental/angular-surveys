@@ -18,7 +18,7 @@ angular.module('mwFormViewer').directive('mwFormViewer', function ($rootScope) {
         templateUrl: 'mw-form-viewer.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: function($timeout, $interpolate, IScrollEvents){
+        controller: function($timeout, $interpolate){
             var ctrl = this;
             // Put initialization logic inside `$onInit()`
             // to make sure bindings have been initialized.
@@ -83,7 +83,6 @@ angular.module('mwFormViewer').directive('mwFormViewer', function ($rootScope) {
 
 
                 var resultPromise = ctrl.onSubmit();
-                $rootScope.$emit(IScrollEvents.REFRESH);
                 resultPromise.then(function(){
                   ctrl.submitStatus='SUCCESS';
                 }).catch(function(){

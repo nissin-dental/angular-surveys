@@ -989,7 +989,7 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
         templateUrl: 'mw-form-page-builder.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: ["$timeout", "mwFormUuid", "mwFormClone", "mwFormBuilderOptions", "IScrollEvents", "Upload", "$q", "$", function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions, IScrollEvents, Upload, $q, $){
+        controller: ["$timeout", "mwFormUuid", "mwFormClone", "mwFormBuilderOptions", "Upload", "$q", "$", function($timeout, mwFormUuid, mwFormClone, mwFormBuilderOptions, Upload, $q, $){
             var ctrl = this;
             var ignoreCloseEdit = false;
             // Put initialization logic inside `$onInit()`
@@ -1131,7 +1131,6 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
 
             ctrl.selectElement = function(element){
               if (validateOpenElement() === true) {
-                $rootScope.$emit(IScrollEvents.REFRESH);
                 ctrl.activeElement = element;
                 ignoreCloseEdit = true;
               } else {
@@ -1245,9 +1244,6 @@ angular.module('mwFormBuilder').directive('mwFormPageBuilder', ["$rootScope", fu
                   if (elementClickedOutsideEdit === true) {
                     if (validateOpenElement() === true) {
                       ctrl.activeElement=null;
-                      $timeout(function() {
-                        $rootScope.$emit(IScrollEvents.REFRESH);
-                      },0);
                     } else {
                       $rootScope.$emit('validateForm');
                     }
