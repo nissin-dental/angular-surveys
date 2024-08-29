@@ -133,7 +133,7 @@ angular.module('mwFormViewer').directive('mwFormViewer', ["$rootScope", function
         templateUrl: 'mw-form-viewer.html',
         controllerAs: 'ctrl',
         bindToController: true,
-        controller: ["$timeout", "$interpolate", "IScrollEvents", function($timeout, $interpolate, IScrollEvents){
+        controller: ["$timeout", "$interpolate", function($timeout, $interpolate){
             var ctrl = this;
             // Put initialization logic inside `$onInit()`
             // to make sure bindings have been initialized.
@@ -198,7 +198,6 @@ angular.module('mwFormViewer').directive('mwFormViewer', ["$rootScope", function
 
 
                 var resultPromise = ctrl.onSubmit();
-                $rootScope.$emit(IScrollEvents.REFRESH);
                 resultPromise.then(function(){
                   ctrl.submitStatus='SUCCESS';
                 }).catch(function(){
@@ -405,7 +404,7 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
       templateUrl: 'mw-form-question.html',
       controllerAs: 'ctrl',
       bindToController: true,
-      controller: ["$timeout", "FormQuestionId", "_", "IScrollEvents", "$rootScope", function ($timeout, FormQuestionId, _, IScrollEvents, $rootScope) {
+      controller: ["$timeout", "FormQuestionId", "_", "$rootScope", function ($timeout, FormQuestionId, _, $rootScope) {
         var ctrl = this;
         ctrl.explanations = [];
         // Put initialization logic inside `$onInit()`
@@ -523,7 +522,6 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
             ctrl.explanations[answer.id] = false;
           }
           ctrl.selectedAnswer = ctrl.questionResponse.selectedAnswers.length || ctrl.isOtherAnswer ? true : null;
-          $rootScope.$emit(IScrollEvents.REFRESH);
 
           ctrl.answerChanged();
         };
@@ -538,7 +536,6 @@ angular.module('mwFormViewer').factory("FormQuestionId", function () {
         ctrl.updateExplanation = function (answer) {
           if (answer != null) {
             ctrl.explanations[answer.id] = !ctrl.explanations[answer.id];
-            $rootScope.$emit(IScrollEvents.REFRESH);
           }
         };
 
